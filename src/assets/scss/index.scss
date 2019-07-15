@@ -1,0 +1,299 @@
+@import './color.scss';
+@font-face {
+  font-family: 'Impact';
+  src: url('/static/fonts/impact.ttf')
+}
+@font-face {
+  font-family: 'Medium';
+  src: url('/static/fonts/PFMedium.ttf')
+}
+@font-face {
+  font-family: 'Regular';
+  src: url('/static/fonts/Regular.ttf')
+}
+html, body {
+  font-size: 100px;
+  padding: 0;
+  margin: 0;
+}
+h1, h2, h3, h4, h5, p, a, ul, li, span, img {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  font-weight: 100;
+  list-style: none;
+}
+a, a:hover, a:active, a:link, a:focus, a:visited{
+  color: $black;
+  background-color: $ts !important;
+}
+
+.ws {
+  &-block {
+    min-height: 100vh;
+  }
+  &-t {
+    &c {text-align: center;vertical-align: middle;}
+    &r {text-align: right;}
+    &l {text-align: left;}
+    &t {vertical-align: top;}
+  }
+
+  &-oh {
+    overflow: hidden;
+    &-y {
+      overflow-y: hidden;
+      overflow-x: auto;
+    }
+    &-x {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+  &-f {
+    &l {float: left;}
+    &r {float: right;}
+  }
+
+  &-mc {
+    margin: 0 auto;
+  }
+
+  &-pr {
+    position: relative;
+  }
+
+  &-explain {
+    padding: .05rem .1rem;
+    border-left: .02rem solid rgb(203, 166, 108)
+  }
+  &-bottom {
+    position: absolute;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+  &-sn {user-select: none;}
+}
+
+.color {
+  &-white {color: $white;}
+  &-blue {color: $blue;}
+  &-green {color: $green;}
+  &-black {color: $black;}
+  &-violet {color: $violet;}
+  &-gray {color: $gray;}
+  &-yellow {color: $yellow;}
+  &-red {color: $red;}
+  &-pink {color: $pink;}
+  &-beidi {color: $beidi;}
+  &-luozi {color: $luozi;}
+  &-money {color: $money;}
+  &-ts {color: $ts;}
+  &-colour span {
+    background-image: linear-gradient(to right, $red, $yellow, $green, $blue, $violet);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: $ts;
+  }
+  &-f3 {color: $f3;}
+  &-9f {color: #9f9f9f;}
+}
+.bg {
+  &-white {background: $white;}
+  &-blue {background: $blue;}
+  &-green {background: $green;}
+  &-black {background: $black;}
+  &-violet {background: $violet;}
+  &-gray {background: $gray;}
+  &-yellow {background: $yellow;}
+  &-red {background: $red;}
+  &-pink {background: $pink;}
+  &-beidi {background: $beidi;}
+  &-luozi {background: $luozi;}
+  &-money {background: $money;}
+  &-ts {background: $ts;}
+  &-blood {background: $blood;}
+  &-f2 {background: #f2f2f2;}
+}
+
+.mg {
+  &5 {margin: .05rem;}
+  &10 {margin: .1rem;}
+  &-t {
+    &5 {
+      margin-top: .05rem;
+    }
+    &10 {
+      margin-top: .1rem;
+    }
+    &15 {
+      margin-top: .15rem;
+    }
+    &20 {
+      margin-top: .2rem;
+    }
+    &40 {
+      margin-top: .4rem;
+    }
+  }
+
+  &-l {
+    &10 {
+      margin-left: .1rem;
+    }
+    &20 {
+      margin-left: .2rem;
+    }
+  }
+}
+
+.pad {
+  &5 {
+    padding: .05rem;
+  }
+  &10 {
+    padding: .1rem;
+  }
+  &20 {
+    padding: .2rem;
+  }
+
+  &-l {
+    &5 {
+      padding: 0 .05rem;
+    }
+    &10 {
+      padding: 0 .1rem;
+    }
+    &15 {
+      padding: 0 .15rem;
+    }
+    &20 {
+      padding: 0 .2rem;
+    }
+    &30 {
+      padding: 0 .3rem;
+    }
+  }
+
+  &-n {
+    &5 {
+      padding: .05rem 0;
+    }
+    &10 {
+      padding: .1rem 0;
+    }
+    &20 {
+      padding: .2rem 0;
+    }
+  }
+}
+
+.radius {
+  &50 {
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  &-50 {
+    border-radius: .5rem;
+    overflow: hidden;
+  }
+  &-20 {
+    border-radius: .2rem;
+    overflow: hidden;
+  }
+  &-40 {
+    border-radius: .4rem;
+    overflow: hidden;
+  }
+  &-10 {
+    border-radius: .1rem;
+    overflow: hidden;
+  }
+  &-5 {
+    border-radius: .05rem;
+    overflow: hidden;
+  }
+}
+.font {
+  &-w {
+    font-weight: bold;
+  }
+  &-big {
+    font-size: .25rem;
+  }
+  &-md {
+    font-size: .18rem;
+  }
+  &-mini {
+    font-size: .1rem;
+  }
+  &-ip {
+    font-family: 'Impact'
+  }
+  &-solid {
+    white-space: nowrap;
+  }
+  &-tl {
+    text-decoration: underline;
+  }
+  &-13 {font-size: .13rem;}
+}
+.border {
+  border: .01rem solid $ts;
+  &-color {
+    &__w {border-color: $white !important;}
+    &__b {border-color: $black;}
+  }
+  &-black {
+    border-color: $black;
+  }
+  &-fc3 {
+    border-color: #fc3;
+  }
+  &-f2 {
+    border-color: #f2f2f2;
+  }
+  &-vip {
+    border-color: #f4c720;
+  }
+  &-c9 {
+    border-color: #c9c9c9;
+  }
+  &-bottom {
+    border-bottom: .01rem solid #d2d2d2 !important;
+  }
+  &-none {
+    & input {
+      border: 0;
+      outline: 0;
+    }
+    border-color: $ts;
+    outline: 0;
+  }
+  &-shadow {
+    box-shadow: .05rem .05rem .1rem rgba(0, 0, 0, .5);
+  }
+}
+
+.img {
+  &-block {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+  }
+}
+.indent {
+  &-20 {
+    text-indent: .2rem;
+  }
+  &-40 {
+    text-indent: .4rem;
+  }
+}
+.letter {
+  &-1 {letter-spacing: .01rem;}
+  &-5 {letter-spacing: .05rem;}
+  &-10 {letter-spacing: .1rem;}
+}
