@@ -100,6 +100,7 @@ a, a:hover, a:active, a:link, a:focus, a:visited{
   &-9f {color: #9f9f9f;}
 }
 .bg {
+  &-w {background: $w;}
   &-white {background: $white;}
   &-blue {background: $blue;}
   &-green {background: $green;}
@@ -114,7 +115,8 @@ a, a:hover, a:active, a:link, a:focus, a:visited{
   &-money {background: $money;}
   &-ts {background: $ts;}
   &-blood {background: $blood;}
-  &-f2 {background: #f2f2f2;}
+  &-f2 {background: $f2;}
+  &-e7eaed {background: $e7eaed;}
 }
 
 .mg {
@@ -144,6 +146,14 @@ a, a:hover, a:active, a:link, a:focus, a:visited{
     }
     &20 {
       margin-left: .2rem;
+    }
+  }
+  &-r {
+    &10 {
+      margin-right: .1rem;
+    }
+    &20 {
+      margin-right: .2rem;
     }
   }
 }

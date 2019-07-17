@@ -1,9 +1,11 @@
 import luoHeader from './header'
 import luoTab from './tabnav'
+import luoList from './list'
 
 const components = [
   luoHeader,
   luoTab,
+  luoList,
 ]
 
 const install = function (Vue, opts = {}) {
@@ -23,4 +25,5 @@ export default {
   install,
   luoHeader,
   luoTab,
+  luoList,
 }

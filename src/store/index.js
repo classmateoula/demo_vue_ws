@@ -6,7 +6,7 @@ const store = new Vuex.Store({
   // 赋值
   state: {
     userId: null,
-    color: 'black',
+    color: '#d2b6e5',
   },
   // 重构
   getters: {

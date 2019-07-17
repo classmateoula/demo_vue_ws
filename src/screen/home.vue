@@ -45,7 +45,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 .box {
-  padding: 0;
+  // padding: 0;
   &-img {
     &-user {
       width: .4rem;
