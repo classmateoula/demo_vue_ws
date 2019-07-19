@@ -1,8 +1,8 @@
 <template>
-  <div class="box">
-    <span class="color-colour">{{ msg }}</span>
+  <div class="box pad20">
+    <luo-header title="主题" />
     <div class="pad-n10">
-      <p>选择主题</p>
+      <p class="pad-n20">选择主题</p>
       <el-select v-model="color" @change="$store.dispatch('setColor', color)">
         <el-option
           v-for="(item, i) in colorList"
@@ -12,13 +12,12 @@
         />
       </el-select>
     </div>
-    <luo-tab :current="4"></luo-tab>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'user',
+  name: 'theme',
   data () {
     return {
       msg: '1011sassss少时诵诗书所所所所所所所所',

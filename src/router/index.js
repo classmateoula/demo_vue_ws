@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/screen/home' // 首页
-import Space from '@/screen/space' // 空间
-import Mail from '@/screen/mail' // 通讯录
-import User from '@/screen/user' // 我的
+import Index from '@/screen/index' // 导航
+import Home from '@/screen/home/index' // 首页
+import Space from '@/screen/space/index' // 空间
+import Mail from '@/screen/mail/index' // 通讯录
+import User from '@/screen/user/index' // 我的
+import Theme from '@/screen/theme/index' // 主题
+import Search from '@/screen/search/index' // 搜索
+import Room from '@/screen/home/room' // 房间
 
 Vue.use(Router)
 
@@ -11,19 +15,35 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/index'
     }, {
-      path: '/home',
-      component: Home
+      path: '/index',
+      redirect: '/home',
+      component: Index,
+      children: [
+        {
+          path: '/home',
+          component: Home
+        }, {
+          path: '/mail',
+          component: Mail
+        }, {
+          path: '/space',
+          component: Space
+        }, {
+          path: '/user',
+          component: User
+        },
+      ]
     }, {
-      path: '/mail',
-      component: Mail
+      path: '/theme',
+      component: Theme
     }, {
-      path: '/space',
-      component: Space
+      path: '/search',
+      component: Search
     }, {
-      path: '/user',
-      component: User
+      path: '/room',
+      component: Room
     }
   ]
 })

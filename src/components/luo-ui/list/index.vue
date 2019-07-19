@@ -1,5 +1,5 @@
 <template>
-  <el-row type="flex" class="box ws-sn" align="middle">
+  <el-row type="flex" class="box ws-sn" align="middle" @click.native="handleClick">
     <el-col :span="3" class="pad-n10 ws-tc">
       <slot></slot>
     </el-col>
@@ -15,6 +15,11 @@
 <script>
 export default {
   name: 'luoList',
+  methods: {
+    handleClick () {
+      this.$emit('change', this)
+    }
+  },
   props: {
     bottom: {
       type: [Boolean, String],

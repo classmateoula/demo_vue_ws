@@ -1,7 +1,7 @@
 <template>
   <div
     id="app"
-    :class="'ws-oh bg-e7eaed color-' + $store.state.color"
+    :class="'ws-oh ws-ns bg-e7eaed color-' + $store.state.color"
     :style="{ color: $store.state.color }"
   >
     <router-view />
@@ -18,7 +18,7 @@ export default {
 @import './assets/scss/index.scss';
 #app {
   font-family: 'Medium';
-  font-size: .12rem;
+  font-size: .14rem;
   min-height: 100vh;
 }
 </style>
