@@ -1,8 +1,8 @@
 <template>
-  <div class="box ws-pr">
-    <audio controls="autoplay" :autoplay="true">
+  <div class="box ws-pr" @click="$router.push('/login')">
+    <audio controls="autoplay" :autoplay="true" v-show="false">
       <source src="../../assets/mp3/mp31.mp3" type="audio/mp3" />
-      浏览器不支持
+      <span>浏览器不支持</span>
     </audio>
     <img src="../../assets/images/img5.png" :style="{ transform: 'scale(' + imgScale + ')' }" alt="qwq" class="box-img">
   </div>
@@ -11,7 +11,7 @@
 <script>
 let timer
 export default {
-  name: 'box',
+  name: 'welcome',
   data () {
     return {
       msg: '欢迎登陆',

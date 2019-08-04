@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { getCache } from '../../static/plug/global'
+
 export default {
   name: 'index',
   data () {
@@ -37,6 +39,11 @@ export default {
       }
     }
   },
+  created () {
+    if (!getCache('token')) {
+      this.$router.replace('/welcome')
+    }
+  }
 }
 </script>
 

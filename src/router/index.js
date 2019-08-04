@@ -9,6 +9,8 @@ import Theme from '@/screen/theme/index' // 主题
 import Search from '@/screen/search/index' // 搜索
 import Room from '@/screen/home/room' // 房间
 import Welcome from '@/screen/welcome/index' // 房间
+import Login from '@/screen/login' // 登录
+import Setting from '@/screen/setting' // 设置
 
 Vue.use(Router)
 
@@ -48,6 +50,12 @@ export default new Router({
     }, {
       path: '/welcome',
       component: Welcome
+    }, {
+      path: '/login',
+      component: Login
+    }, {
+      path: '/setting',
+      component: Setting
     }
   ]
 })
