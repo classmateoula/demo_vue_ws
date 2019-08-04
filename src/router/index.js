@@ -8,6 +8,7 @@ import User from '@/screen/user/index' // 我的
 import Theme from '@/screen/theme/index' // 主题
 import Search from '@/screen/search/index' // 搜索
 import Room from '@/screen/home/room' // 房间
+import Welcome from '@/screen/welcome/index' // 房间
 
 Vue.use(Router)
 
@@ -44,6 +45,9 @@ export default new Router({
     }, {
       path: '/room',
       component: Room
+    }, {
+      path: '/welcome',
+      component: Welcome
     }
   ]
 })

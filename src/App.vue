@@ -17,7 +17,7 @@ export default {
 <style lang="scss">
 @import './assets/scss/index.scss';
 #app {
-  font-family: 'Medium';
+  font-family: '微软雅黑';
   font-size: .14rem;
   min-height: 100vh;
 }
