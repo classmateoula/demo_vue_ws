@@ -10,6 +10,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { getCache } from '../static/plug/global'
+import '../static/plug/apk'
 import luoUI from './components/luo-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
