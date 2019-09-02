@@ -7,6 +7,7 @@ const store = new Vuex.Store({
   state: {
     userId: null,
     color: '#2f2f36',
+    server: 'http://ws.leimu.xn--6qq986b3xl',
   },
   // 重构
   getters: {

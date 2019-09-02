@@ -13,6 +13,8 @@ import { getCache } from '../static/plug/global'
 import '../static/plug/apk'
 import luoUI from './components/luo-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import ws from 'ws'
+console.log(ws)
 
 axios.defaults.baseURL = 'http://api.leimu.xn--6qq986b3xl'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -25,7 +27,7 @@ axios.defaults.transformRequest = [
 // axios.defaults.withCredentials = true
 Vue.prototype.$http = axios
 
-Vue.use(ElementUI, {size: 'small', zIndex: 577, local})
+Vue.use(ElementUI, {size: 'small', zIndex: 99, local})
 Vue.use(luoUI)
 Vue.use(VueClipboard)
 
@@ -54,6 +56,7 @@ Vue.prototype.warnFun = function (err, msg) {
 }
 
 Vue.config.productionTip = false
+// Vue.use(VueSocket)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

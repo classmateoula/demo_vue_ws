@@ -11,6 +11,7 @@ import Room from '@/screen/home/room' // 房间
 import Welcome from '@/screen/welcome/index' // 房间
 import Login from '@/screen/login' // 登录
 import Setting from '@/screen/setting' // 设置
+import Version from '@/screen/version' // 关于伪信 版本更新
 
 Vue.use(Router)
 
@@ -56,6 +57,9 @@ export default new Router({
     }, {
       path: '/setting',
       component: Setting
+    }, {
+      path: '/version',
+      component: Version
     }
   ]
 })
