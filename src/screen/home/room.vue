@@ -67,7 +67,8 @@ export default {
         { id: 2, user: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=781687761,856433086&fm=26&gp=0.jpg', name: 'zz二姐欢乐多', content: '大家好', img: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2245237821,3225377198&fm=26&gp=0.jpg' },
         { id: 3, user: 'http://img2.imgtn.bdimg.com/it/u=3589842218,96038394&fm=26&gp=0.jpg', name: '豪王', content: '大家好', img: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2245237821,3225377198&fm=26&gp=0.jpg' },
         { id: 4, user: 'http://img5.imgtn.bdimg.com/it/u=3689952427,3385628114&fm=26&gp=0.jpg', name: '叱咤影流AA坑', content: '大家好', img: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2245237821,3225377198&fm=26&gp=0.jpg' },
-      ]
+      ],
+      ws: null,
     }
   },
   methods: {
@@ -79,6 +80,15 @@ export default {
     handleSubmit () {
       this.dataList.push({ id: 1, user: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3271432153,1040556601&fm=26&gp=0.jpg', name: '亲生大姐就一个', content: this.msg, img: '' },)
       this.msg = null
+      this.$http({
+        method: 'GET',
+        data: {},
+        url: 'http://127.0.0.1:3000/post'
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     // 展示 / 隐藏 图片框
     setMoreHeight (status) {
@@ -89,7 +99,52 @@ export default {
       }
       this.moreHeight = 2
       this.moreStatus = status
-    }
+    },
+    // 建立双向协议
+    init () {
+      const wsuri = 'ws://127.0.0.1:3000/ws?msg=' + this.msg
+      this.ws = new WebSocket(wsuri)
+      this.ws.onmessage = this.websocketonmessage
+      this.ws.onopen = this.websocketonopen
+      this.ws.onerror = this.websocketonerror
+      this.ws.onclose = this.websocketonclose
+      // console.log(this.ws)
+    },
+    // 数据接收
+    websocketonmessage (e) {
+      const redata = JSON.parse(e.data)
+      console.log(redata)
+      this.dataList.push({
+        id: 4,
+        user: 'http://img5.imgtn.bdimg.com/it/u=3689952427,3385628114&fm=26&gp=0.jpg',
+        name: '叱咤影流AA坑',
+        content: redata.msg,
+        img: null
+      })
+    },
+    // 连接建立之后执行send方法发送数据
+    websocketonopen () {
+      let actions = {"msg": this.msg}
+      this.websocketsend(JSON.stringify(actions))
+    },
+    // 失败重连
+    websocketonerror () {
+      this.init()
+    },
+    // 关闭连接
+    websocketonclose (e) {
+      console.log('断开连接', e)
+    },
+    // 数据发送
+    websocketsend (data) {
+      this.ws.send(data)
+    },
+  },
+  created () {
+    this.init()
+  },
+  destroyed () {
+    this.ws.close()
   },
   components: {
     RoomLook,
