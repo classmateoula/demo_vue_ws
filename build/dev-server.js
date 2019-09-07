@@ -1,10 +1,34 @@
-// const http = require("http");
-// const fs = require("fs");
-// const querystring = require("querystring");
-// const urlLib = require("url");
-// const ws = require('ws')
+const http = require("http");
+const getApi = require('../src/db')
+const urlLib = require('url')
+const WebSocketServer = require('ws').Server
+const querystring = require("querystring");
 
-// //存取用户的数据，一般来说要存入数据库
+http.createServer((req, res) => {
+  let url = urlLib.parse(req.url)
+  let str = ''
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  if (url.path.slice(0, 4) != '/api') {
+    res.end(JSON.stringify({code: 405, msg: '网络错误'}))
+  }
+  if (req.method === 'GET') {
+    str = url.query
+  } else if (req.method === 'POST') {
+    req.on('data', (data) => {
+      str += data
+    })
+  }
+  req.on('end', () => {
+    getApi(url.pathname.slice(5), querystring.parse(str)).then(result => {
+      res.end(JSON.stringify({code: 200, info: result, msg: '请求成功'}))
+    }).catch(err => {
+      res.end(JSON.stringify({code: 400, msg: err}))
+    })
+  })
+}).listen(3000, () => {
+  console.log('网络连接已打开：http://127.0.0.1:3000')
+})
+
 // var users = {};
 
 // var server = http.createServer(function(req , res){
@@ -16,9 +40,6 @@
 //   req.on('data' , function(data){
 //     str += data;
 //   });
-//   req.on('message', function (res) {
-//     console.log(res)
-//   })
 //   req.on('end' , function(){
 //     var obj = urlLib.parse(req.url , true);
 //     const url = obj.pathname;
@@ -78,31 +99,20 @@
 //   });
 // });
 
-// server.listen(3000 , function(err){
-//   if(!err){
-//     console.log('server is listening 3000 port...');
-//   }else{
-//     console.log(err);
-//   }
-// });
-const WebSocket = require('ws');
-
-const WebSocketServer = WebSocket.Server;
 
 const wss = new WebSocketServer({
-  port: 3000
+  port: 9000
 });
 
-wss.on('connection', function (ws) {
-    console.log(`[SERVER] connection()`);
-    ws.on('message', function (message) {
-      console.log(`[SERVER] Received: ${message}`);
-      setInterval(() => {
-        ws.send(message, (err) => {
-            if (err) {
-                console.log(`[SERVER] error: ${err}`);
-            }
-        });
-      }, 1000);
+wss.on('connection', function (res, req) {
+  let url = urlLib.parse(req.url)
+  res.on('message', function (message) {
+    getApi(url.pathname.slice(5), JSON.parse(message)).then(result => {
+      console.log(result)
+      res.send(JSON.stringify({code: 200, info: result, msg: '请求成功'}))
+    }).catch(err => {
+      res.send(JSON.stringify({code: 400, msg: err}))
     })
+  })
 });
+console.log('ws服务已开启：ws:127.0.0.1:9000')

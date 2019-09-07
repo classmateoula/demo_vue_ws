@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { baseUrl, wsUrl } from '../api'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -8,6 +9,8 @@ const store = new Vuex.Store({
     userId: null,
     color: '#2f2f36',
     server: 'http://ws.leimu.xn--6qq986b3xl',
+    wsUrl,
+    baseUrl,
   },
   // 重构
   getters: {

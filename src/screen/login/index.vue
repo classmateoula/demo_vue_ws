@@ -2,20 +2,35 @@
   <div class="box pad10">
     <div class="pad-n40 ws-tc">
       <img src="../../assets/logo.png" alt="qwq" class="box-img__user">
-      <p>1828045377</p>
+      <p>{{ formData.tel }}</p>
     </div>
     <el-form :model="formData" ref="formData" :rules="formRules">
-      <el-form-item prop="password" label="密码">
+      <el-form-item prop="tel" label="手机号">
         <el-input
-          v-model="formData.password"
-          class="border-none"
+          v-model="formData.tel"
+          class="border-none ws-fr"
+          style="width: 80%;"
+          placeholder="请填写手机号"
+        ></el-input>
+      </el-form-item>
+      <el-form-item prop="upwd" label="密码">
+        <el-input
+          type="password"
+          v-model="formData.upwd"
+          class="border-none ws-fr"
           style="width: 80%;"
           clearable
-          placeholder="请填写伪信密码"
+          placeholder="请填写密码"
         ></el-input>
       </el-form-item>
     </el-form>
-    <el-button style="width: 100%;" class="mg-t20" type="success" size="medium" @click="handleSubmit">登录</el-button>
+    <el-button
+      style="width: 100%;"
+      class="mg-t20"
+      type="success"
+      size="medium"
+      @click="handleSubmit"
+    >登录</el-button>
   </div>
 </template>
 
@@ -28,23 +43,49 @@ export default {
     return {
       msg: '登录',
       formData: {
-        password: null,
+        tel: null,
+        upwd: null,
+        dev: null,
       },
       formRules: {
-        password: [
+        tel: [
+          { required: true, message: '手机号不能为空' }
+        ],
+        upwd: [
           { required: true, message: '请输入密码' }
         ]
       },
     }
   },
   methods: {
+    postSubmit () {
+      this.$http({
+        method: 'POST',
+        url: this.$store.state.baseUrl + '/login/login',
+        data: {
+          tel: this.formData.uname,
+          upwd: this.formData.upwd,
+          dev: this.formData.dev
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          setCache('token', res.data.token)
+          this.$router.push('/index')
+        } else {
+          this.warnFun(res.msg)
+        }
+      }).catch(err => this.errFun(err))
+    },
     handleSubmit () {
-      setCache('token', new Date().getTime())
-      this.$router.push('/index')
+      this.$refs.formData.validate(valid => {
+        if (valid) {
+          this.postSubmit()
+        }
+      })
     }
   },
   mounted () {
-    console.log(this.$store.state.userId)
+    this.formData.dev = window.navigator.appVersion
   }
 }
 </script>

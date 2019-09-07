@@ -54,12 +54,14 @@ import {
   RoomLook,
   RoomMore,
 } from '@/components/room'
+import { baseUrl, wsUrl } from '@/api'
 
 export default {
   name: 'room',
   data () {
     return {
       msg: 'room',
+      rid: null,
       moreHeight: 0,
       moreStatus: null, // 1 - 表情； 2 - 更多
       dataList: [
@@ -81,9 +83,16 @@ export default {
       this.dataList.push({ id: 1, user: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3271432153,1040556601&fm=26&gp=0.jpg', name: '亲生大姐就一个', content: this.msg, img: '' },)
       this.msg = null
       this.$http({
-        method: 'GET',
-        data: {},
-        url: 'http://127.0.0.1:3000/post'
+        method: 'POST',
+        data: {
+          user: 'http://img5.imgtn.bdimg.com/it/u=3689952427,3385628114&fm=26&gp=0.jpg',
+          uname: '叱咤影流AA坑',
+          msg: this.msg,
+          img: null,
+          rid: 1,
+          uid: 1,
+        },
+        url: 'http://127.0.0.1:3000/api/ws/msg_post'
       }).then(res => {
         console.log(res)
       }).catch(err => {
@@ -102,7 +111,7 @@ export default {
     },
     // 建立双向协议
     init () {
-      const wsuri = 'ws://127.0.0.1:3000/ws?msg=' + this.msg
+      const wsuri = wsUrl + '/api/ws/msg_get'
       this.ws = new WebSocket(wsuri)
       this.ws.onmessage = this.websocketonmessage
       this.ws.onopen = this.websocketonopen
@@ -114,17 +123,10 @@ export default {
     websocketonmessage (e) {
       const redata = JSON.parse(e.data)
       console.log(redata)
-      this.dataList.push({
-        id: 4,
-        user: 'http://img5.imgtn.bdimg.com/it/u=3689952427,3385628114&fm=26&gp=0.jpg',
-        name: '叱咤影流AA坑',
-        content: redata.msg,
-        img: null
-      })
     },
     // 连接建立之后执行send方法发送数据
     websocketonopen () {
-      let actions = {"msg": this.msg}
+      let actions = {rid: 1, uid: 1}
       this.websocketsend(JSON.stringify(actions))
     },
     // 失败重连

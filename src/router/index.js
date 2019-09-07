@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/screen/index' // 导航
+import ErrPath from '@/screen/404' // 错误页面
 import Home from '@/screen/home/index' // 首页
 import Space from '@/screen/space/index' // 空间
 import Mail from '@/screen/mail/index' // 通讯录
@@ -60,6 +61,9 @@ export default new Router({
     }, {
       path: '/version',
       component: Version
+    }, {
+      path: '/404',
+      component: ErrPath
     }
   ]
 })
