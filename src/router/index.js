@@ -48,6 +48,7 @@ export default new Router({
       component: Search
     }, {
       path: '/room',
+      name: 'room',
       component: Room
     }, {
       path: '/welcome',

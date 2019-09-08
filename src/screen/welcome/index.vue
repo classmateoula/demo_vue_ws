@@ -1,7 +1,7 @@
 <template>
   <div
     class="box ws-pr"
-    @click="$router.push('/login')"
+    @click="$router.replace('/login')"
     :style="{ backgroundImage: `url(${require('../../../static/images/img1.png')})` }"
   >
     <audio controls="autoplay" :autoplay="true" v-show="false">

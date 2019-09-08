@@ -39,11 +39,6 @@ export default {
       }
     }
   },
-  created () {
-    if (!getCache('token')) {
-      this.$router.replace('/welcome')
-    }
-  }
 }
 </script>
 

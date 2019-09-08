@@ -8,6 +8,8 @@ http.createServer((req, res) => {
   let url = urlLib.parse(req.url)
   let str = ''
   res.setHeader('Access-Control-Allow-Origin', '*')
+  res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8'})
+  // console.log('开始连接')
   if (url.path.slice(0, 4) != '/api') {
     res.end(JSON.stringify({code: 405, msg: '网络错误'}))
   }
@@ -19,7 +21,8 @@ http.createServer((req, res) => {
     })
   }
   req.on('end', () => {
-    getApi(url.pathname.slice(5), querystring.parse(str)).then(result => {
+    console.log('传入参数')
+    getApi(url.pathname.slice(4), querystring.parse(str)).then(result => {
       res.end(JSON.stringify({code: 200, info: result, msg: '请求成功'}))
     }).catch(err => {
       res.end(JSON.stringify({code: 400, msg: err}))
@@ -105,14 +108,14 @@ const wss = new WebSocketServer({
 });
 
 wss.on('connection', function (res, req) {
-  let url = urlLib.parse(req.url)
   res.on('message', function (message) {
-    getApi(url.pathname.slice(5), JSON.parse(message)).then(result => {
-      console.log(result)
-      res.send(JSON.stringify({code: 200, info: result, msg: '请求成功'}))
-    }).catch(err => {
-      res.send(JSON.stringify({code: 400, msg: err}))
-    })
+    console.log(message)
+    if (urlLib.parse(req.url).path.indexOf('/api/ws/') != -1) {
+      console.log('成功')
+      res.send(JSON.stringify({code: 200, data: JSON.parse(message), msg: '请求成功'}))
+    } else {
+      res.send(JSON.stringify({code: 400, msg: '请求失败'}))
+    }
   })
 });
 console.log('ws服务已开启：ws:127.0.0.1:9000')

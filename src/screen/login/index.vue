@@ -31,11 +31,12 @@
       size="medium"
       @click="handleSubmit"
     >登录</el-button>
+    {{formData.dev}}
   </div>
 </template>
 
 <script>
-import { setCache } from '../../../static/plug/global'
+import { setCache, getCache } from '../../../static/plug/global'
 
 export default {
   name: 'login',
@@ -61,15 +62,33 @@ export default {
     postSubmit () {
       this.$http({
         method: 'POST',
-        url: this.$store.state.baseUrl + '/login/login',
+        url: this.$store.state.baseUrl + '/post/login',
         data: {
-          tel: this.formData.uname,
+          tel: this.formData.tel,
           upwd: this.formData.upwd,
           dev: this.formData.dev
         }
       }).then(res => {
         if (res.data.code === 200) {
-          setCache('token', res.data.token)
+          setCache('userId', res.data.info.uid)
+          this.$store.dispatch('setUserId', res.data.info.uid)
+          this.getUserInfo(res.data.info.uid)
+        } else {
+          this.warnFun(res.msg)
+        }
+      }).catch(err => this.errFun(err))
+    },
+    // 获取用户详情
+    getUserInfo (uid) {
+      this.$http({
+        method: 'POST',
+        url: this.$store.state.get_user_info,
+        data: {
+          uid
+        },
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('setUserInfo', res.data.info)
           this.$router.push('/index')
         } else {
           this.warnFun(res.msg)
@@ -84,7 +103,12 @@ export default {
       })
     }
   },
-  mounted () {
+  created () {
+    if (getCache('userId')) {
+      this.$store.dispatch('setUserId', getCache('userId'))
+      this.$router.replace('/home')
+      return false
+    }
     this.formData.dev = window.navigator.appVersion
   }
 }

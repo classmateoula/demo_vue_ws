@@ -18,8 +18,10 @@ axios.defaults.baseURL = 'http://api.leimu.xn--6qq986b3xl'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.transformRequest = [
   function (data) {
-    data.token = getCache('token')
-    return Qs.stringify(data)
+    if (data) {
+      data.uid = getCache('userId')
+      return Qs.stringify(data)
+    }
   }
 ]
 // axios.defaults.withCredentials = true
@@ -34,6 +36,13 @@ Vue.filter('money', function (val, dec) {
   if (!val || isNaN(val / 1)) return '0'
   val = Number(val).toFixed(dec || 2)
   return val
+})
+// 时间过滤器
+Vue.filter('time', function (val) {
+  if (!val || isNaN(val / 1)) return ''
+  let t = new Date(val / 1)
+  console.log(t)
+  return t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate()
 })
 
 Vue.prototype.errFun = function (err, msg) {

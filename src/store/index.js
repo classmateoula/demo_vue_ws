@@ -1,17 +1,20 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { baseUrl, wsUrl } from '../api'
-
+import * as api from '../api'
 Vue.use(Vuex)
+
+let state = {
+  userId: null,
+  userInfo: {},
+  color: '#2f2f36',
+  server: 'http://ws.leimu.xn--6qq986b3xl',
+}
+for (let i in api) {
+  state[i] = api[i]
+}
 const store = new Vuex.Store({
   // 赋值
-  state: {
-    userId: null,
-    color: '#2f2f36',
-    server: 'http://ws.leimu.xn--6qq986b3xl',
-    wsUrl,
-    baseUrl,
-  },
+  state,
   // 重构
   getters: {
     updUserId (state) {
@@ -26,6 +29,9 @@ const store = new Vuex.Store({
     setColorMua (state, val) {
       state.color = val
     },
+    setUserInfoMua (state, val) {
+      state.userInfo = val
+    },
   },
   // 监听
   actions: {
@@ -34,6 +40,9 @@ const store = new Vuex.Store({
     },
     setColor (context, val) {
       context.commit('setColorMua', val)
+    },
+    setUserInfo (context, val) {
+      context.commit('setUserInfoMua', val)
     },
   }
 })

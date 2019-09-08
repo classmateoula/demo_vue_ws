@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     handleLogout () {
-      removeCache('token')
+      removeCache('userId')
       this.$router.replace('/login')
     }
   },

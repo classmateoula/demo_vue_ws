@@ -10,7 +10,12 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  created () {
+    if (!this.$store.state.userId) {
+      this.$router.push('/welcome')
+    }
+  }
 }
 </script>
 
@@ -20,5 +25,9 @@ export default {
   font-family: '微软雅黑';
   font-size: .14rem;
   min-height: 100vh;
+}
+.el-message {
+  min-width: 80%;
+  font-size: .2rem;
 }
 </style>
