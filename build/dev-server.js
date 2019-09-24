@@ -2,6 +2,7 @@ const http = require("http");
 const getApi = require('../src/db')
 const urlLib = require('url')
 const WebSocketServer = require('ws').Server
+const Koa = require('koa')
 const querystring = require("querystring");
 
 http.createServer((req, res) => {
@@ -102,17 +103,25 @@ http.createServer((req, res) => {
 //   });
 // });
 
-
+const app = new Koa()
+let ws_server = app.listen(9000)
 const wss = new WebSocketServer({
-  port: 9000
+  server: ws_server
 });
+
+wss.broadcast = function (data) {
+  wss.clients.forEach(function (client) {
+      client.send(data);
+  });
+};
 
 wss.on('connection', function (res, req) {
   res.on('message', function (message) {
-    console.log(message)
     if (urlLib.parse(req.url).path.indexOf('/api/ws/') != -1) {
-      console.log('成功')
-      res.send(JSON.stringify({code: 200, data: JSON.parse(message), msg: '请求成功'}))
+      // res.on('open', () => {
+      //   wss.broadcast(JSON.stringify({code: 200, data: JSON.parse(message), msg: '请求成功'}))
+      // })
+      wss.broadcast(JSON.stringify({code: 200, data: JSON.parse(message), msg: '请求成功'}))
     } else {
       res.send(JSON.stringify({code: 400, msg: '请求失败'}))
     }

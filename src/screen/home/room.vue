@@ -1,11 +1,11 @@
 <template>
   <div class="box">
     <luo-header title="家人群（9）" more></luo-header>
-    <div class="box-body pad-n20">
+    <div class="box-body  pad-n20" ref="msgBox">
       <div
         v-for="(item, i) in dataList"
         :key="i"
-        class="ws-oh mg-t20"
+        class="ws-oh mg-t20 animated bounceInUp"
       >
         <img
           :src="item.user_img"
@@ -58,6 +58,9 @@ import {
   RoomMore,
 } from '@/components/room'
 import { baseUrl, wsUrl } from '@/api'
+import 'animate.css'
+
+let timer
 
 export default {
   name: 'room',
@@ -75,6 +78,7 @@ export default {
       moreStatus: null, // 1 - 表情； 2 - 更多
       dataList: [],
       ws: null,
+      dataType: 1, // 1-登场；2-消息/图片/语音；
     }
   },
   methods: {
@@ -107,8 +111,8 @@ export default {
         url: this.$store.state.ws_msg_post
       }).then(res => {
         if (res.data.code === 200) {
-          this.msg = null
-          this.init()
+          this.dataType = 2
+          this.websocketonopen()
         } else {
           this.warnFun('发送失败')
         }
@@ -133,14 +137,31 @@ export default {
       this.ws.onerror = this.websocketonerror
       this.ws.onclose = this.websocketonclose
       // console.log(this.ws)
+      this.getDataList()
     },
     // 数据接收
     websocketonmessage (e) {
-      this.$message('qwq')
       const res = JSON.parse(e.data)
+      console.log(res)
       if (res.code === 200) {
-        if (res.data.rid == this.formData.rid && (res.data.msg || res.data.img)) {
-          this.dataList.push(this.formData)
+        if (res.data.data.rid == this.formData.rid) {
+          switch (res.data.type) {
+            case 1:
+              const h = this.$createElement
+              this.$notify({
+                title: '提示',
+                message: h('i', { style: 'color: teal'}, res.data.data.uname + '登场'),
+                offset: 50
+              })
+              break
+            case 2:
+              this.dataList.push(res.data.data)
+              break
+            default: break
+          }
+          timer = setTimeout(() => {
+            document.body.scrollTop = document.documentElement.scrollTop = this.$refs.msgBox.scrollHeight
+          }, 0);
         }
       } else {
         this.warnFun(res.msg)
@@ -148,14 +169,16 @@ export default {
     },
     // 连接建立之后执行send方法发送数据
     websocketonopen () {
-      console.log(this.formData)
-      let actions = this.formData
+      let actions = {
+        type: this.dataType,
+        data: this.formData
+      }
       this.websocketsend(JSON.stringify(actions))
+      this.formData.msg = null
     },
     // 失败重连
     websocketonerror () {
       this.init()
-      this.getDataList()
     },
     // 关闭连接
     websocketonclose (e) {
@@ -175,7 +198,11 @@ export default {
     this.init()
   },
   destroyed () {
-    this.ws.close()
+    if (this.ws) {
+      this.ws.close()
+    }
+    timer = null
+    clearTimeout(timer)
   },
   components: {
     RoomLook,

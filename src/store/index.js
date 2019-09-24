@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as api from '../api'
+import { getCache } from '../../static/plug/global'
 Vue.use(Vuex)
 
 let state = {
-  userId: null,
-  userInfo: {},
+  userId: getCache('userId'),
+  userInfo: JSON.parse(getCache('userInfo') ? getCache('userInfo') : '{}'),
   color: '#2f2f36',
   server: 'http://ws.leimu.xn--6qq986b3xl',
 }

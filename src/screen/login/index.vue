@@ -74,7 +74,7 @@ export default {
           this.$store.dispatch('setUserId', res.data.info.uid)
           this.getUserInfo(res.data.info.uid)
         } else {
-          this.warnFun(res.msg)
+          this.warnFun(res.data.msg)
         }
       }).catch(err => this.errFun(err))
     },
@@ -89,6 +89,7 @@ export default {
       }).then(res => {
         if (res.data.code === 200) {
           this.$store.dispatch('setUserInfo', res.data.info)
+          setCache('userInfo', JSON.stringify(res.data.info))
           this.$router.push('/index')
         } else {
           this.warnFun(res.msg)
