@@ -31,9 +31,19 @@ module.exports = function (url, data = {}) {
         break
       // 登录
       case '/post/login':
-        sql = `(SELECT uid FROM user_list WHERE tel='${data.tel}' AND upwd='${data.upwd}' AND dev='${data.dev}')`
+        sql = `(SELECT uid FROM user_list WHERE tel='${data.tel}'` + (data.type == 1 ? ` AND upwd='${data.upwd}' AND dev='${data.dev}')` : ')')
         connection.query(sql, function (error, result) {
-          return error || result.length === 0 ? rej(error || '登录失败！') : resolve(result[0])
+          if (data.type == 1) {
+            return error || result.length === 0 ? rej(error || '登录失败！') : resolve(result[0])
+          } else {
+            if (result.length > 0) {
+              return rej('用户名已存在')
+            } else {
+              connection.query(`INSERT INTO user_list(upwd, dev, tel) VALUES ('${data.upwd}', '${data.dev}', '${data.tel}')`, (err, res) => {
+                return err ? rej(err || '注册失败') : resolve('注册成功')
+              })
+            }
+          }
         })
         break
     }
