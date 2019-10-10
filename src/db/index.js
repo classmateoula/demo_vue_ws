@@ -1,10 +1,13 @@
 const connection = require('./common')
 connection.connect()
 
-let sql = ''
+let [sql, tokens] = ['', []]
 module.exports = function (url, data = {}) {
   return new Promise((resolve, rej) => {
     console.log(url)
+    if (url != '/post/login' && !tokens.includes(data.token)) {
+      return rej('未登陆')
+    }
     switch (url) {
       // 获取房间列表
       case '/get/room_list':
@@ -30,6 +33,9 @@ module.exports = function (url, data = {}) {
         sql = `INSERT INTO msg_list(msg, img, uid, uname, rid, time, user_img) VALUES ('${data.msg}','${data.img}','${data.uid}','${data.uname}','${data.rid}', '${new Date().getTime()}', '${data.user_img}')`
         break
       // 登录
+      case '/post/logout':
+        tokens.splice(tokens.indexOf(data.token), 1)
+        return resolve('退出登陆')
       case '/post/login':
         sql = `(SELECT uid FROM user_list WHERE tel='${data.tel}'` + (data.type == 1 ? ` AND upwd='${data.upwd}' AND dev='${data.dev}')` : ')')
         connection.query(sql, function (error, result) {

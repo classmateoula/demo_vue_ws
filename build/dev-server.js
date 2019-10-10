@@ -26,7 +26,11 @@ http.createServer((req, res) => {
     getApi(url.pathname.slice(4), querystring.parse(str)).then(result => {
       res.end(JSON.stringify({code: 200, info: result, msg: '请求成功'}))
     }).catch(err => {
-      res.end(JSON.stringify({code: 400, msg: err}))
+      if (err == '未登陆') {
+        res.end(JSON.stringify({ code: 401, msg: '未登录' }))
+      } else {
+        res.end(JSON.stringify({code: 400, msg: err}))
+      }
     })
   })
 }).listen(3000, () => {
