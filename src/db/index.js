@@ -1,27 +1,21 @@
 const connection = require('./common')
 connection.connect()
 
-let [sql, tokens] = ['', []]
+let [sql, token, tokens, tokenIndex] = ['', '', [], 0]
 module.exports = function (url, data = {}) {
   return new Promise((resolve, rej) => {
-    console.log(url)
-    if (url != '/post/login' && !tokens.includes(data.token)) {
+    tokenIndex = tokens.map(val => val.token).indexOf(data.token)
+    if (url != '/post/login' && (tokenIndex === -1 || tokens[tokenIndex].t - new Date() < 0) || tokens.length > 1000) {
       return rej('未登陆')
     }
+    console.log(tokens)
     switch (url) {
       // 获取房间列表
       case '/get/room_list':
         sql = 'SELECT * FROM room_list'
         connection.query(sql, function (error, result) {
-          let res = result.filter(val => val.users && val.users.split(',').indexOf(data.uid) != -1)
+          let res = result.filter(val => val.users && val.users.split(',').includes(tokens[tokenIndex].id.toString()))
           return error ? rej(error) : resolve(res)
-        })
-        break
-      // 获取用户详情
-      case '/get/user_info':
-        sql = `SELECT * FROM user_list WHERE uid='${data.uid}'`
-        connection.query(sql, function (error, result) {
-          return error || !result[0] ? rej(error || '请求失败') : resolve(result[0])
         })
         break
       // 获取消息列表
@@ -34,20 +28,31 @@ module.exports = function (url, data = {}) {
         break
       // 登录
       case '/post/logout':
-        tokens.splice(tokens.indexOf(data.token), 1)
+        tokens.splice(tokens.map(val => val.token).indexOf(data.token), 1)
         return resolve('退出登陆')
       case '/post/login':
-        sql = `(SELECT uid FROM user_list WHERE tel='${data.tel}'` + (data.type == 1 ? ` AND upwd='${data.upwd}' AND dev='${data.dev}')` : ')')
+        token = Buffer.from(data.tel + data.upwd + data.dev).toString('base64').slice(0, 16)
+        sql = `(SELECT * FROM user_list WHERE tel='${data.tel}'` + (data.type == 1 ? ` AND upwd='${data.upwd}' AND dev='${data.dev}')` : ')')
         connection.query(sql, function (error, result) {
           if (data.type == 1) {
-            return error || result.length === 0 ? rej(error || '登录失败！') : resolve(result[0])
-          } else {
-            if (result.length > 0) {
-              return rej('用户名已存在')
+            if (error) {
+              return rej('登录失败')
             } else {
-              connection.query(`INSERT INTO user_list(upwd, dev, tel) VALUES ('${data.upwd}', '${data.dev}', '${data.tel}')`, (err, res) => {
-                return err ? rej(err || '注册失败') : resolve('注册成功')
+              result[0].token = token
+              tokens.push({
+                token,
+                id: result[0].uid,
+                t: new Date().getTime() + 24 * 60 * 60 * 1000
               })
+              return resolve(result[0])
+            }
+          } else {
+            if (!error && result.length === 0) {
+              connection.query(`INSERT INTO user_list(upwd, dev, tel) VALUES ('${data.upwd}', '${data.dev}', '${data.tel}')`, (err, res) => {
+                return err ? rej(err) : resolve(res)
+              })
+            } else {
+              return rej('已被注册')
             }
           }
         })

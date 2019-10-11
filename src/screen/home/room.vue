@@ -57,7 +57,8 @@ import {
   RoomLook,
   RoomMore,
 } from '@/components/room'
-import { baseUrl, wsUrl } from '@/api'
+import { wsUrl } from '@/api/index'
+import { get_msg_list, post_add_msg } from '@/api/room'
 import 'animate.css'
 
 let timer
@@ -84,19 +85,13 @@ export default {
   methods: {
     // 获取列表
     getDataList () {
-      this.$http({
-        method: 'POST',
-        url: this.$store.state.ws_msg_get,
-        data: {
-          rid: this.formData.rid
-        }
+      get_msg_list({
+        rid: this.formData.rid
       }).then(res => {
-        if (res.data.code === 200) {
-          this.dataList = res.data.info
-        } else {
-          this.warnFun(res.msg)
+        if (res.code === 200) {
+          this.dataList = res.info
         }
-      }).catch(err => this.errFun(err))
+      })
     },
     // 发送图片
     handleChangeLook (url) {
@@ -105,18 +100,12 @@ export default {
     },
     // 发送消息
     handleSubmit () {
-      this.$http({
-        method: 'POST',
-        data: this.formData,
-        url: this.$store.state.ws_msg_post
-      }).then(res => {
-        if (res.data.code === 200) {
+      post_add_msg(this.formData).then(res => {
+        if (res.code === 200) {
           this.dataType = 2
           this.websocketonopen()
-        } else {
-          this.warnFun('发送失败')
         }
-      }).catch(err => this.errFun(err))
+      })
     },
     // 展示 / 隐藏 图片框
     setMoreHeight (status) {
@@ -189,7 +178,7 @@ export default {
       this.ws.send(data)
     },
   },
-  created () {
+  mounted () {
     if (!this.$route.params.rid) {
       this.$router.back()
       return false

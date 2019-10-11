@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { get_room_list } from '@/api/room'
 
 export default {
   name: 'home',
@@ -50,19 +51,11 @@ export default {
   methods: {
     // 获取房间列表
     getDataList () {
-      this.$http({
-        method: 'POST',
-        url: this.$store.state.get_room_list,
-        data: {
-          uid: this.$store.state.userId
+      get_room_list().then(res => {
+        if (res.code === 200) {
+          this.dataList = res.info
         }
-      }).then(res => {
-        if (res.data.code === 200) {
-          this.dataList = res.data.info
-        } else {
-          this.warnFun(res.msg)
-        }
-      }).catch(err => this.errFun(err))
+      })
     },
     handleNavtoRoom (rid) {
       this.$router.push({

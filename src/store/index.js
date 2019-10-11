@@ -5,7 +5,7 @@ import { getCache } from '../../static/plug/global'
 Vue.use(Vuex)
 
 let state = {
-  userId: getCache('userId'),
+  token: getCache('token'),
   userInfo: JSON.parse(getCache('userInfo') ? getCache('userInfo') : '{}'),
   color: '#2f2f36',
   server: 'http://ws.leimu.xn--6qq986b3xl',
@@ -24,8 +24,8 @@ const store = new Vuex.Store({
   },
   // 修改
   mutations: {
-    setUserIdMua (state, val) {
-      state.userId = val
+    setTokenMua (state, val) {
+      state.token = val
     },
     setColorMua (state, val) {
       state.color = val
@@ -36,8 +36,8 @@ const store = new Vuex.Store({
   },
   // 监听
   actions: {
-    setUserId (context, val) {
-      context.commit('setUserIdMua', val)
+    setToken (context, val) {
+      context.commit('setTokenMua', val)
     },
     setColor (context, val) {
       context.commit('setColorMua', val)

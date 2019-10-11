@@ -10,12 +10,7 @@
 
 <script>
 export default {
-  name: 'App',
-  created () {
-    if (!this.$store.state.userId) {
-      this.$router.push('/welcome')
-    }
-  }
+  name: 'App'
 }
 </script>
 
