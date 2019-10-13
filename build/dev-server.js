@@ -5,6 +5,8 @@ const WebSocketServer = require('ws').Server
 const Koa = require('koa')
 const querystring = require("querystring");
 
+let tokens = []
+
 http.createServer((req, res) => {
   let url = urlLib.parse(req.url)
   let str = ''
@@ -22,8 +24,13 @@ http.createServer((req, res) => {
     })
   }
   req.on('end', () => {
-    console.log('传入参数')
+    console.log(url.pathname.slice(4))
     getApi(url.pathname.slice(4), querystring.parse(str)).then(result => {
+      if (url.pathname.slice(4) === '/post/login') {
+        tokens.push(result.token)
+      } else if (url.pathname.slice(4) === '/post/logout') {
+        tokens.splice(tokens.indexOf(result.token), 1)
+      }
       res.end(JSON.stringify({code: 200, info: result, msg: '请求成功'}))
     }).catch(err => {
       if (err == '未登陆') {
@@ -121,11 +128,12 @@ wss.broadcast = function (data) {
 
 wss.on('connection', function (res, req) {
   res.on('message', function (message) {
-    if (urlLib.parse(req.url).path.indexOf('/api/ws/') != -1) {
+    message = JSON.parse(message)
+    if (urlLib.parse(req.url).path.indexOf('/api/ws/') != -1 && tokens.includes(message.token)) {
       // res.on('open', () => {
       //   wss.broadcast(JSON.stringify({code: 200, data: JSON.parse(message), msg: '请求成功'}))
       // })
-      wss.broadcast(JSON.stringify({code: 200, data: JSON.parse(message), msg: '请求成功'}))
+      wss.broadcast(JSON.stringify({code: 200, data: message, msg: '请求成功'}))
     } else {
       res.send(JSON.stringify({code: 400, msg: '请求失败'}))
     }

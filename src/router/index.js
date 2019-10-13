@@ -13,6 +13,7 @@ import Welcome from '@/screen/welcome/index' // 房间
 import Login from '@/screen/login' // 登录
 import Setting from '@/screen/setting' // 设置
 import Version from '@/screen/version' // 关于伪信 版本更新
+import Friend from '@/screen/mail/friend' // 添加好友
 
 Vue.use(Router)
 
@@ -62,6 +63,9 @@ export default new Router({
     }, {
       path: '/version',
       component: Version
+    }, {
+      path: '/friend',
+      component: Friend
     }, {
       path: '/404',
       component: ErrPath

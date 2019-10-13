@@ -112,7 +112,7 @@ export default {
             setCache('token', res.info.token)
             setCache('userInfo', JSON.stringify(res.info))
             this.$store.dispatch('setToken', res.info.token)
-            this.$store.dispatch('setUserInfo', JSON.stringify(res.info))
+            this.$store.dispatch('setUserInfo', res.info)
             this.$router.push('/home')
           } else {
             this.handleLogin()

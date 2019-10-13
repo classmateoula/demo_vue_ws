@@ -139,7 +139,7 @@ export default {
               const h = this.$createElement
               this.$notify({
                 title: '提示',
-                message: h('i', { style: 'color: teal'}, res.data.data.uname + '登场'),
+                message: h('i', { style: 'color: teal'}, (res.data.data.uname || '游客' + res.data.data.tel) + '登场'),
                 offset: 50
               })
               break
@@ -160,7 +160,8 @@ export default {
     websocketonopen () {
       let actions = {
         type: this.dataType,
-        data: this.formData
+        data: this.formData,
+        token: this.$store.state.token
       }
       this.websocketsend(JSON.stringify(actions))
       this.formData.msg = null

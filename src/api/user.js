@@ -17,3 +17,39 @@ export function post_logout (data) {
     data
   })
 }
+
+// 获取用户列表 {name: '用户名或手机号'}
+export function get_user_list (data) {
+  return axios({
+    url: '/get/user_list',
+    method: 'post',
+    data
+  })
+}
+
+// 获取用户列表 {name: '用户名或手机号'}
+export function add_friend (data) {
+  return axios({
+    url: '/add/friend',
+    method: 'post',
+    data
+  })
+}
+
+// 申请好友
+export function add_friend_apply (data) {
+  return axios({
+    url: '/add/friend/apply',
+    method: 'POST',
+    data
+  })
+}
+
+// 获取好友列表
+export function get_friend_list (data) {
+  return axios({
+    url: '/get/friend_list',
+    method: 'POST',
+    data
+  })
+}
