@@ -24,7 +24,7 @@ http.createServer((req, res) => {
       str += data
     })
   }
-  req.on('end', () => {
+  // req.on('end', () => {
     console.log(url.pathname.slice(4))
     getApi(url.pathname.slice(4), querystring.parse(str)).then(result => {
       if (url.pathname.slice(4) === '/post/login') {
@@ -40,7 +40,7 @@ http.createServer((req, res) => {
         res.end(JSON.stringify({code: 400, msg: err}))
       }
     })
-  })
+  // })
 }).listen(3000, () => {
   console.log('网络连接已打开：http://127.0.0.1:3000')
 })
