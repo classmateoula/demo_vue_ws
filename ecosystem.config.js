@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
     name: 'API',
-    script: './build/dev-server.js',
+    script: './db/server.js',
 
     // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
     args: 'one two',
