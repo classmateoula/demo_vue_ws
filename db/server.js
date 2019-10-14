@@ -1,5 +1,5 @@
 const http = require("http");
-const getApi = require('../src/db')
+const getApi = require('./api')
 const urlLib = require('url')
 const WebSocketServer = require('ws').Server
 const Koa = require('koa')
