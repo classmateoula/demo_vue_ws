@@ -12,7 +12,8 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js",
-    "server": "node db/server.js"
+    "server": "node db/server.js",
+    "pm2": "pm2 reload API"
   },
   "dependencies": {
     "animate.css": "^3.7.2",
