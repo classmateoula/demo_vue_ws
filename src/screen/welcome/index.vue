@@ -29,6 +29,10 @@ export default {
     }
   },
   created () {
+    if (!this.$store.state.token) {
+      this.$router.push('/home')
+      return false
+    }
     timer = setInterval(() => {
       this.imgScale += 1.8
       if (this.imgScale > 5) {

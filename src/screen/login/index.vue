@@ -72,6 +72,7 @@
 
 <script>
 import { setCache, getCache } from '../../../static/plug/global'
+import { post_login } from '@/api/user'
 
 export default {
   name: 'login',
@@ -79,8 +80,8 @@ export default {
     return {
       msg: '登录',
       formData: {
-        tel: null,
-        upwd: null,
+        tel: '11111111111',
+        upwd: '111111',
         dev: null,
         type: null, // 1-登录；2-注册
       },
@@ -105,42 +106,21 @@ export default {
     },
     // 提交
     postSubmit () {
-      this.$http({
-        method: 'POST',
-        url: this.$store.state.baseUrl + '/post/login',
-        data: this.formData
-      }).then(res => {
-        if (res.data.code === 200) {
+      post_login(this.formData).then(res => {
+        if (res.code === 200) {
           if (this.formData.type === 1) {
-            setCache('userId', res.data.info.uid)
-            this.$store.dispatch('setUserId', res.data.info.uid)
-            this.getUserInfo(res.data.info.uid)
+            setCache('token', res.info.token)
+            setCache('userInfo', JSON.stringify(res.info))
+            this.$store.dispatch('setToken', res.info.token)
+            this.$store.dispatch('setUserInfo', res.info)
+            this.$router.push('/home')
           } else {
             this.handleLogin()
           }
-        } else {
-          this.warnFun(res.data.msg)
         }
-      }).catch(err => this.errFun(err))
+      })
     },
-    // 获取用户详情
-    getUserInfo (uid) {
-      this.$http({
-        method: 'POST',
-        url: this.$store.state.get_user_info,
-        data: {
-          uid
-        },
-      }).then(res => {
-        if (res.data.code === 200) {
-          this.$store.dispatch('setUserInfo', res.data.info)
-          setCache('userInfo', JSON.stringify(res.data.info))
-          this.$router.push('/index')
-        } else {
-          this.warnFun(res.msg)
-        }
-      }).catch(err => this.errFun(err))
-    },
+    // 登录/注册
     handleSubmit () {
       this.$refs.formData.validate(valid => {
         if (valid) {
@@ -150,11 +130,6 @@ export default {
     }
   },
   created () {
-    if (getCache('userId')) {
-      this.$store.dispatch('setUserId', getCache('userId'))
-      this.$router.replace('/home')
-      return false
-    }
     this.formData.dev = window.navigator.appVersion
   }
 }

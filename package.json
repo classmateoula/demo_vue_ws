@@ -12,7 +12,7 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js",
-    "server": "node build/dev-server.js"
+    "server": "node db/server.js"
   },
   "dependencies": {
     "animate.css": "^3.7.2",

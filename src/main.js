@@ -3,27 +3,15 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import local from 'element-ui/lib/locale/lang/en'
-import axios from 'axios'
-import Qs from 'qs'
 import VueClipboard from 'vue-clipboard2'
 import App from './App'
 import router from './router'
 import store from './store'
-import { getCache } from '../static/plug/global'
 import '../static/plug/apk'
 import luoUI from './components/luo-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import { axios } from './api/index'
 
-axios.defaults.baseURL = 'http://api.leimu.xn--6qq986b3xl'
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-axios.defaults.transformRequest = [
-  function (data) {
-    if (data) {
-      data.uid = getCache('userId')
-      return Qs.stringify(data)
-    }
-  }
-]
 // axios.defaults.withCredentials = true
 Vue.prototype.$http = axios
 

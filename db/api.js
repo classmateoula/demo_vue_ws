@@ -59,7 +59,7 @@ module.exports = function (url, data = {}) {
         tokens.splice(tokens.map(val => val.token).indexOf(data.token), 1)
         return resolve('退出登陆')
       case '/post/login':
-        let d = new Date().getTime() % 100000
+        let d = new Date().getTime().toString(16)
         sql = `(SELECT uname, avatar, tel, status, uid, user_ids FROM user_list WHERE tel='${data.tel}'` + (data.type == 1 ? ` AND upwd='${data.upwd}' AND dev='${data.dev}')` : ')')
         connection.query(sql, function (error, result) {
           if (data.type == 1) {

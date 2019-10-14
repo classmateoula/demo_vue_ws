@@ -1,7 +1,7 @@
 <template>
   <div class="box bg-f3">
     <luo-header title="通讯录" search :left="false" right></luo-header>
-    <luo-list title="新的朋友" bottom>
+    <luo-list title="新的朋友" bottom @change="$router.push('/friend')">
       <svg t="1563378092130" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11458" width=".2rem" height=".2rem"><path d="M0 0m102.4 0l819.2 0q102.4 0 102.4 102.4l0 819.2q0 102.4-102.4 102.4l-819.2 0q-102.4 0-102.4-102.4l0-819.2q0-102.4 102.4-102.4Z" fill="#F67016" p-id="11459"></path><path d="M331.0336 330.9056a133.1968 133.1968 0 1 0 266.3936 0 133.4016 133.4016 0 0 0-266.3936 0zM204.8 748.7744c0 5.3248 0.4096 15.5648 0.4096 15.5648h350.1056v-79.1552a44.288 44.288 0 0 1 38.5536-43.6736h31.5648v-41.7536a31.2576 31.2576 0 0 1 29.7216-25.6 262.2208 262.2208 0 0 0-189.2864-69.12c-175.2576 0-261.0688 106.8544-261.0688 243.7376z m487.9104-134.5536a24.9856 24.9856 0 0 0-25.2416 24.5504v43.6736H622.592a24.9856 24.9856 0 0 0-25.2416 24.5504v32.768a24.9856 24.9856 0 0 0 25.2416 24.5504h44.8768v43.6736a24.9856 24.9856 0 0 0 25.2416 24.5504h33.664a24.9856 24.9856 0 0 0 25.2416-24.5504v-43.648h44.8768a24.9856 24.9856 0 0 0 25.2416-24.5504v-32.768a24.9856 24.9856 0 0 0-25.2416-24.5504h-44.9024v-43.6992a24.9856 24.9856 0 0 0-25.2416-24.5504z" fill="#FFFFFF" p-id="11460"></path></svg>
     </luo-list>
     <luo-list title="群聊" bottom>
@@ -16,19 +16,47 @@
     <p class="pad-n10">
       <span class="mg-l10 color-black font-mini">我的企业</span>
     </p>
-    <luo-list title="我的企业">
+    <luo-list title="我的企业" class="">
       <svg t="1563378597454" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="23012" width=".2rem" height=".2rem"><path d="M352 288h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z m0 128h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z m0 128h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z m0 128h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z m192-384h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z m0 128h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z m0 128h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z m0 128h-64a32 32 0 0 0 0 64h64a32 32 0 0 0 0-64z" p-id="23013" fill="#98c6ff"></path><path d="M960 864h-64V288a64 64 0 0 0-64-64H704v-64a64 64 0 0 0-64-64H192a64 64 0 0 0-64 64v704H64a32 32 0 0 0 0 64h896a32 32 0 0 0 0-64z m-768 0V160h448v704H192z m512 0V288h128v576H704z" p-id="23014" fill="#98c6ff"></path></svg>
+    </luo-list>
+    <p class="pad-n10">
+      <span class="mg-l10 color-black font-mini">我的好友</span>
+    </p>
+    <luo-list
+      v-for="item in dataList"
+      :key="item.uid"
+      :title="item.uname"
+    >
+      <el-image :src="item.avatar"></el-image>
     </luo-list>
   </div>
 </template>
 
 <script>
+import { get_friend_list } from '@/api/user'
+
 export default {
   name: 'mail',
   data () {
     return {
-      msg: '1011sassss少时诵诗书所所所所所所所所'
+      msg: '获取好友列表',
+      dataList: null,
     }
+  },
+  methods: {
+    // 获取好友列表
+    getDataList () {
+      get_friend_list({
+        user_ids: this.$store.state.userInfo.user_ids
+      }).then(res => {
+        if (res.code === 200) {
+          this.dataList = res.info
+        }
+      })
+    }
+  },
+  created () {
+    this.getDataList()
   }
 }
 </script>
