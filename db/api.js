@@ -50,6 +50,10 @@ module.exports = function (url, data = {}) {
           return err ? rej(err) : resolve(res.filter(val => data.user_ids.split(',').includes(val.uid.toString())))
         })
         break
+      // 创建房间
+      case '/post/room/add':
+        sql = ``
+        break
       // 新增消息
       case '/post/add_msg':
         sql = `INSERT INTO msg_list(msg, img, uid, uname, rid, time, user_img) VALUES ('${data.msg}','${data.img}','${data.uid}','${data.uname}','${data.rid}', '${new Date().getTime()}', '${data.user_img}')`
