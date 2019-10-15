@@ -26,3 +26,12 @@ export function post_add_msg (data) {
     data
   })
 }
+
+// 新增房间
+export function post_room_add (data) {
+  return axios({
+    url: '/post/room/add',
+    method: 'post',
+    data
+  })
+}

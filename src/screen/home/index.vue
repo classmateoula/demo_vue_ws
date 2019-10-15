@@ -1,37 +1,39 @@
 <template>
   <div class="box">
     <luo-header title="微信" search :left="false" right></luo-header>
-    <el-row
-      class="box-list ws-oh"
-      type="flex"
-      justify="space-between"
-      style="min-width: 3rem;"
-      v-for="item in dataList"
-      :key="item.rid"
-      @click.native="handleNavtoRoom(item.rid)"
-    >
-      <el-col :span="4">
-        <div class="pad-n10 box-img-user ws-mc">
-          <el-image :src="item.img">
-            <img
-              slot="error"
-              src="../../assets/images/img1.png"
-              class="img-block radius-10"
-              alt="qwq"
-            />
-          </el-image>
-        </div>
-      </el-col>
-      <el-col :span="20" class="border-bottom pad-l10">
-        <div class="ws-fl">
-          <h3 class="mg-t10">{{ item.rname }}</h3>
-          <p class="color-9f font-mini mg-t5">{{ item.title }}</p>
-        </div>
-        <div class="ws-fr">
-          <p class="ws-tr font-mini mg-t5">{{ item.time | time }}</p>
-        </div>
-      </el-col>
-    </el-row>
+    <div class="box-container">
+      <el-row
+        class="box-list ws-oh"
+        type="flex"
+        justify="space-between"
+        style="min-width: 3rem;"
+        v-for="item in dataList"
+        :key="item.rid"
+        @click.native="handleNavtoRoom(item.rid)"
+      >
+        <el-col :span="4">
+          <div class="pad-n10 box-img-user ws-mc">
+            <el-image :src="item.img">
+              <img
+                slot="error"
+                src="../../assets/images/img1.png"
+                class="img-block radius-10"
+                alt="qwq"
+              />
+            </el-image>
+          </div>
+        </el-col>
+        <el-col :span="20" class="border-bottom pad-l10">
+          <div class="ws-fl">
+            <h3 class="mg-t10">{{ item.rname }}</h3>
+            <p class="color-9f font-mini mg-t5">{{ item.title }}</p>
+          </div>
+          <div class="ws-fr">
+            <p class="ws-tr font-mini mg-t5">{{ item.time | time }}</p>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -74,10 +76,11 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 .box {
-  // padding: 0;
-  &-list {
+  &-container {
+    min-height: 70vh;
     background-color: #fff;
-    min-height: 85vh;
+  }
+  &-list {
     transition: all .15s;
     background: #ffffff;
     &:active {

@@ -26,6 +26,7 @@
       v-for="item in dataList"
       :key="item.uid"
       :title="item.uname"
+      @change="navToRoom(item)"
     >
       <el-image :src="item.avatar"></el-image>
     </luo-list>
@@ -34,6 +35,7 @@
 
 <script>
 import { get_friend_list } from '@/api/user'
+import { post_room_add } from '@/api/room'
 
 export default {
   name: 'mail',
@@ -44,6 +46,22 @@ export default {
     }
   },
   methods: {
+    // 进入房间
+    navToRoom (row) {
+      post_room_add({
+        uid: row.uid,
+        uname: row.uname,
+        img: row.avatar
+      }).then(res => {
+        if (res.code === 200) {
+          this.$router.push({
+            name: 'room',
+            path: '/room',
+            params: { rid: res.info }
+          })
+        }
+      })
+    },
     // 获取好友列表
     getDataList () {
       get_friend_list({

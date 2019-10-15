@@ -130,7 +130,7 @@ export default {
     }
   },
   created () {
-    this.formData.dev = window.navigator.appVersion
+    this.formData.dev = window.navigator.appVersion.slice(0, 99)
   }
 }
 </script>
