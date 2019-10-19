@@ -24,23 +24,24 @@ export default new Router({
       redirect: '/index'
     }, {
       path: '/index',
-      redirect: '/home',
+      name: 'index',
+      // redirect: '/home',
       component: Index,
-      children: [
-        {
-          path: '/home',
-          component: Home
-        }, {
-          path: '/mail',
-          component: Mail
-        }, {
-          path: '/space',
-          component: Space
-        }, {
-          path: '/user',
-          component: User
-        },
-      ]
+      // children: [
+      //   {
+      //     path: '/home',
+      //     component: Home
+      //   }, {
+      //     path: '/mail',
+      //     component: Mail
+      //   }, {
+      //     path: '/space',
+      //     component: Space
+      //   }, {
+      //     path: '/user',
+      //     component: User
+      //   },
+      // ]
     }, {
       path: '/theme',
       component: Theme

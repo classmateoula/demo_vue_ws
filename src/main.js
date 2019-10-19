@@ -33,23 +33,6 @@ Vue.filter('time', function (val) {
   return t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate()
 })
 
-Vue.prototype.errFun = function (err, msg) {
-  console.log(err)
-  this.$loading().close()
-  this.$router.push('/404')
-  // this.$message({
-  //   type: 'error',
-  //   message: msg || '系统更新，请稍后再试'
-  // })
-}
-Vue.prototype.warnFun = function (err, msg) {
-  console.log(err)
-  this.$message({
-    type: 'warning',
-    message: msg || err || '请求失败'
-  })
-}
-
 Vue.config.productionTip = false
 // Vue.use(VueSocket)
 /* eslint-disable no-new */

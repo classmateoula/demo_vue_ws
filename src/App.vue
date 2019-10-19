@@ -1,7 +1,7 @@
 <template>
   <div
     id="app"
-    :class="'ws-oh ws-ns bg-e7eaed color-' + $store.state.color"
+    :class="'ws-ns bg-w color-' + $store.state.color"
     :style="{ color: $store.state.color }"
   >
     <router-view />
@@ -19,7 +19,7 @@ export default {
 #app {
   font-family: '微软雅黑';
   font-size: .14rem;
-  min-height: 100vh;
+  background: #fff;
 }
 .el-message {
   min-width: 80%;

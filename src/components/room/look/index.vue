@@ -47,7 +47,7 @@ export default {
     handleStart ({ changedTouches }) {
       this.clientStart = changedTouches[0].clientX
     },
-    // 易懂结束
+    // 移动结束
     handleMove ({ changedTouches }) {
       let p = changedTouches[0].clientX - this.clientStart
       if (!(Math.abs(p) > 100)) {

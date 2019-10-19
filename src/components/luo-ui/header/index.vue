@@ -2,7 +2,9 @@
   <div class="box ws-pr ws-sn">
     <div class="box-header border-bottom" :style="{ background, color }">
       <div class="ws-oh">
-        <svg v-if="left" @click="$router.back()" t="1563099198923" class="icon ws-fl mg-l10" viewBox="0 0 1024 1024" version="1.1" p-id="1106" width=".15rem" height=".38rem"><path d="M736 960c-9 0-18.1-3.2-25-9.6L263 535.2c-13.8-12.8-13.8-33.6 0-46.4L711 73.6c13.8-12.8 36.2-12.8 50 0 13.8 12.8 13.8 33.6 0 46.4L338 512l423 392c13.8 12.8 13.8 33.6 0 46.4-6.9 6.4-16 9.6-25 9.6z" p-id="1107" fill="#2f2f36"></path></svg>
+        <slot name="left">
+          <svg v-if="left" @click="$router.back()" t="1563099198923" class="icon ws-fl mg-l10" viewBox="0 0 1024 1024" version="1.1" p-id="1106" width=".15rem" height=".38rem"><path d="M736 960c-9 0-18.1-3.2-25-9.6L263 535.2c-13.8-12.8-13.8-33.6 0-46.4L711 73.6c13.8-12.8 36.2-12.8 50 0 13.8 12.8 13.8 33.6 0 46.4L338 512l423 392c13.8 12.8 13.8 33.6 0 46.4-6.9 6.4-16 9.6-25 9.6z" p-id="1107" fill="#2f2f36"></path></svg>
+        </slot>
         <slot v-if="custom"></slot>
         <span v-else class="font-w ws-fl mg-l10">{{ title || $route.name }}</span>
         <svg v-if="right" @click="setShowContent" t="1563105431428" class="box-icon-right ws-fr pad-l10" viewBox="0 0 1024 1024" version="1.1" p-id="2085" width=".19rem" height=".38rem"><path d="M512 1024A512 512 0 1 1 1024 512 512 512 0 0 1 512 1024z m0-938.692923A426.692923 426.692923 0 1 0 938.692923 512 426.692923 426.692923 0 0 0 512 85.307077zM748.307692 551.384615H551.384615v196.923077a39.384615 39.384615 0 1 1-78.76923 0V551.384615H275.692308a39.384615 39.384615 0 1 1 0-78.76923H472.615385V275.692308a39.384615 39.384615 0 0 1 78.76923 0V472.615385h196.923077a39.384615 39.384615 0 0 1 0 78.76923z" p-id="2086" fill="#2f2f36"></path></svg>

@@ -30,7 +30,7 @@ export default {
   },
   created () {
     if (!this.$store.state.token) {
-      this.$router.push('/home')
+      this.$router.push('/index')
       return false
     }
     timer = setInterval(() => {

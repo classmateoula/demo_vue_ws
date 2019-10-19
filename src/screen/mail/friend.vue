@@ -42,12 +42,16 @@ export default {
   name: 'friend',
   data () {
     return {
-      msg: 'VUE新页面',
+      msg: '好友页面',
       searchName: null,
       dataList: null,
     }
   },
   methods: {
+    // 聊天
+    handleMessage (data) {
+      console.log(data)
+    },
     // 添加好友
     handleSubmit (uid) {
       add_friend({

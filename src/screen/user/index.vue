@@ -49,8 +49,14 @@ export default {
   name: 'user',
   data () {
     return {
-      msg: '1011sassss少时诵诗书所所所所所所所所',
+      msg: '用户详情',
     }
+  },
+  methods: {
+    // 刷新
+    load () {
+      console.log('刷新')
+    },
   },
   mounted () {
     console.log(this.$store.state.userId)

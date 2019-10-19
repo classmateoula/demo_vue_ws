@@ -1,23 +1,30 @@
 <template>
   <div class="box">
-    <luo-header title="家人群（9）" more></luo-header>
+    <luo-header v-if="roomInfo" :title="roomInfo.rname" more>
+      <svg slot="left" @click="$emit('changeHeader')" t="1563099198923" class="icon ws-fl mg-l10" viewBox="0 0 1024 1024" version="1.1" p-id="1106" width=".15rem" height=".38rem"><path d="M736 960c-9 0-18.1-3.2-25-9.6L263 535.2c-13.8-12.8-13.8-33.6 0-46.4L711 73.6c13.8-12.8 36.2-12.8 50 0 13.8 12.8 13.8 33.6 0 46.4L338 512l423 392c13.8 12.8 13.8 33.6 0 46.4-6.9 6.4-16 9.6-25 9.6z" p-id="1107" fill="#2f2f36"></path></svg>
+    </luo-header>
     <div class="box-body  pad-n20" ref="msgBox">
       <div
         v-for="(item, i) in dataList"
         :key="i"
         class="ws-oh mg-t20 animated bounceInUp"
       >
-        <img
+        <el-image
           :src="item.user_img"
-          alt="qwq"
           class="box-img__user radius-5"
-          :style="{ float: item.uid == $store.state.userId ? 'right' : 'left' }"
+          :style="{ float: item.uid == formData.uid ? 'right' : 'left' }"
         >
-        <div :style="{ float: item.uid == $store.state.userId ? 'right' : 'left' }">
-          <img v-if="item.img" :src="item.img" alt="qwq" class="box-img">
+          <img slot="error" :src="require('../../assets/logo.png')" alt="罗" class="img-block">
+        </el-image>
+        <div :style="{ float: item.uid == formData.uid ? 'right' : 'left' }">
+          <el-image
+            v-if="item.img"
+            :src="item.img"
+            class="box-img"
+          ></el-image>
           <div
             v-else
-            :class="(item.uid == $store.state.userId ? 'bg-blue' : 'bg-w') + ' pad10 radius-5'"
+            :class="(item.uid == formData.uid ? 'bg-blue' : 'bg-w') + ' pad10 radius-5'"
           >{{ item.msg }}</div>
         </div>
       </div>
@@ -57,36 +64,84 @@ import {
   RoomLook,
   RoomMore,
 } from '@/components/room'
-import { wsUrl } from '@/api/index'
-import { get_msg_list, post_add_msg } from '@/api/room'
+import { get_msg_list, post_add_msg, get_room_info } from '@/api/room'
 import 'animate.css'
 
 let timer
 
 export default {
   name: 'room',
+  props: {
+    rid: {
+      type: Number,
+    }
+  },
   data () {
     return {
       formData: {
-        user_img: this.$store.state.userInfo.img,
+        user_img: this.$store.state.userInfo.avatar,
         uname: this.$store.state.userInfo.uname,
         msg: null,
         img: null,
         rid: null,
-        uid: this.$store.state.userId,
+        uid: this.$store.state.userInfo.uid,
       },
       moreHeight: 0,
       moreStatus: null, // 1 - 表情； 2 - 更多
       dataList: [],
-      ws: null,
-      dataType: 1, // 1-登场；2-消息/图片/语音；
+      roomInfo: {
+        rname: null,
+      },
     }
   },
   methods: {
+    // 刷新
+    load () {
+      this.getDataList()
+    },
+    // 收到消息
+    handleMessage (data) {
+      switch (data.type) {
+        case 1:
+          const h = this.$createElement
+          if (!data.data.uname) {
+            data.data.uname = '游客' + new Date().getTime().toString(16)
+          }
+          this.$notify({
+            title: '提示',
+            message: h('i', { style: 'color: teal'}, data.data.uname + '登场'),
+            offset: 50
+          })
+          break
+        case 2:
+          this.dataList.push(data.data)
+          break
+        default: break
+      }
+      timer = setTimeout(() => {
+        document.body.scrollTop = document.documentElement.scrollTop = this.$refs.msgBox.scrollHeight
+      }, 0);
+    },
+    // 获取房间详情
+    getRoomInfo () {
+      get_room_info({
+        rid: this.rid
+      }).then(res => {
+        if (res.code === 200) {
+          this.roomInfo = res.info[0]
+          this.$emit('message', {
+            type: 1,
+            data: this.formData,
+            token: this.$store.state.token
+          })
+          this.getDataList()
+        }
+      })
+    },
     // 获取列表
     getDataList () {
       get_msg_list({
-        rid: this.formData.rid
+        rid: this.rid
       }).then(res => {
         if (res.code === 200) {
           this.dataList = res.info
@@ -102,8 +157,13 @@ export default {
     handleSubmit () {
       post_add_msg(this.formData).then(res => {
         if (res.code === 200) {
-          this.dataType = 2
-          this.websocketonopen()
+          let actions = {
+            type: 2,
+            data: this.formData,
+            token: this.$store.state.token
+          }
+          this.$emit('message', actions)
+          this.formData.msg = null
         }
       })
     },
@@ -117,81 +177,12 @@ export default {
       this.moreHeight = 2
       this.moreStatus = status
     },
-    // 建立双向协议
-    init () {
-      const wsuri = wsUrl + '/api/ws/'
-      this.ws = new WebSocket(wsuri)
-      this.ws.onmessage = this.websocketonmessage
-      this.ws.onopen = this.websocketonopen
-      this.ws.onerror = this.websocketonerror
-      this.ws.onclose = this.websocketonclose
-      // console.log(this.ws)
-      this.getDataList()
-    },
-    // 数据接收
-    websocketonmessage (e) {
-      const res = JSON.parse(e.data)
-      console.log(res)
-      if (res.code === 200) {
-        if (res.data.data.rid == this.formData.rid) {
-          switch (res.data.type) {
-            case 1:
-              const h = this.$createElement
-              this.$notify({
-                title: '提示',
-                message: h('i', { style: 'color: teal'}, (res.data.data.uname || '游客' + res.data.data.tel) + '登场'),
-                offset: 50
-              })
-              break
-            case 2:
-              this.dataList.push(res.data.data)
-              break
-            default: break
-          }
-          timer = setTimeout(() => {
-            document.body.scrollTop = document.documentElement.scrollTop = this.$refs.msgBox.scrollHeight
-          }, 0);
-        }
-      } else {
-        this.warnFun(res.msg)
-      }
-    },
-    // 连接建立之后执行send方法发送数据
-    websocketonopen () {
-      let actions = {
-        type: this.dataType,
-        data: this.formData,
-        token: this.$store.state.token
-      }
-      this.websocketsend(JSON.stringify(actions))
-      this.formData.msg = null
-    },
-    // 失败重连
-    websocketonerror () {
-      this.init()
-    },
-    // 关闭连接
-    websocketonclose (e) {
-      console.log('断开连接', e)
-    },
-    // 数据发送
-    websocketsend (data) {
-      this.ws.send(data)
-    },
   },
-  mounted () {
-    if (!this.$route.params.rid) {
-      this.$router.back()
-      return false
-    }
-    this.formData.rid = this.$route.params.rid
-    this.init()
+  created () {
+    this.formData.rid = this.rid
+    this.getRoomInfo()
   },
   destroyed () {
-    if (this.ws) {
-      this.ws.close()
-    }
-    timer = null
     clearTimeout(timer)
   },
   components: {

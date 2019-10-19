@@ -35,3 +35,11 @@ export function post_room_add (data) {
     data
   })
 }
+
+export function get_room_info (data) {
+  return axios({
+    url: '/get/room/info',
+    method: 'post',
+    data
+  })
+}

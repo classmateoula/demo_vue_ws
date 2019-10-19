@@ -47,7 +47,7 @@ export default {
         tel: '11111111111',
         upwd: '111111',
         dev: null,
-        type: null, // 1-登录；2-注册
+        type: 1, // 1-登录；2-注册
       },
       formRules: {
         tel: [
@@ -73,7 +73,7 @@ export default {
             setCache('userInfo', JSON.stringify(res.info))
             this.$store.dispatch('setToken', res.info.token)
             this.$store.dispatch('setUserInfo', res.info)
-            this.$router.push('/home')
+            this.$router.push('/index')
           } else {
             this.handleLogin()
           }

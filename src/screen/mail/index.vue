@@ -46,6 +46,10 @@ export default {
     }
   },
   methods: {
+    // 刷新
+    load () {
+      console.log('刷新')
+    },
     // 进入房间
     navToRoom (row) {
       post_room_add({
