@@ -5,12 +5,18 @@
     @touchmove="handleMove"
     @touchend="handleEnd"
   >
-    <div class="box-load">
-      <el-divider>{{ clientMean > 80 ? '松开刷新' : '下拉刷新' }}</el-divider>
+    <div
+      class="box-load ws-tc"
+      :style="{
+        top: ((clientMean > 100 ? 100 : clientMean) - 100) + 'px'
+      }"
+    >
+      <i :class="clientMean > 100 ? 'el-icon-refresh-right' : 'el-icon-arrow-down'"></i>
+      <p class="font-mini">{{ clientMean > 100 ? '放手刷新' : '下拉刷新' }}</p>
     </div>
     <luoRoom
       @changeHeader="setActiveItem(0)"
-      @message="websocketonopen"
+      @message="websocketsend"
       ref="room"
       v-if="current === 1"
       :rid="rid"
@@ -18,27 +24,23 @@
     <el-carousel
       ref="carousel"
       v-show="current != 1"
-      :style="{
-        zIndex: 3,
-        marginTop: (clientMean > 10 ? clientMean : 0) + 'px'
-      }"
       :autoplay="false"
       height="100vh"
-      :initial-index="1"
+      :initial-index="currentStart"
       indicator-position="none"
       :loop="false"
       arrow="click"
       :interval="0"
     >
-      <el-carousel-item class="ws-oh">
-        <luoMail
+      <el-carousel-item>
+        <luoHome
           @change="changeFriend"
-          ref="mail"
-        ></luoMail>
+          ref="home"
+        ></luoHome>
       </el-carousel-item>
       <el-carousel-item>
       </el-carousel-item>
-      <el-carousel-item class="ws-oh">
+      <el-carousel-item>
         <luoUser ref="user"></luoUser>
       </el-carousel-item>
     </el-carousel>
@@ -46,9 +48,10 @@
 </template>
 
 <script>
+import { getCache, setCache } from '../../static/plug/global'
 import { wsUrl } from '@/api/index'
 import luoRoom from './home/room'
-import luoMail from './mail/index'
+import luoHome from './home/index'
 import luoUser from './user/index'
 
 export default {
@@ -61,20 +64,30 @@ export default {
       clientY: null,
       clientMean: 0,
       current: 1,
+      currentStart: 1,
       dataType: 1, // 1-登场；2-消息/图片/语音；
     }
   },
   methods: {
     // 刷新
     handleLoad () {
-      this.$refs.mail.load()
-      this.$refs.user.load()
-      this.$refs.room.load()
+      switch (this.current) {
+        case 0:
+          this.$refs.home.load()
+          break
+        case 1:
+          this.$refs.room.load()
+          break
+        case 2:
+          this.$refs.user.load()
+          break
+        default: break
+      }
     },
     // 移动开始
     handleStart ({ changedTouches }) {
       this.clientX = changedTouches[0].clientX
-      this.clientY = changedTouches[0].clientY < 80 ? changedTouches[0].clientY : 10000
+      this.clientY = changedTouches[0].clientY < 100 ? changedTouches[0].clientY : 10000
     },
     // 移动中
     handleMove ({ changedTouches }) {
@@ -83,12 +96,12 @@ export default {
     // 移动结束
     handleEnd ({ changedTouches }) {
       let x = changedTouches[0].clientX - this.clientX
-      if (this.clientMean > 80) {
+      if (this.clientMean > 100) {
         this.clientMean = 0
         this.handleLoad()
         return false
       }
-      if (Math.abs(x) > 80 && this.clientMean < 50) {
+      if (Math.abs(x) > 100 && this.clientMean < 50) {
         if (x < 0 && this.current < 2) {
           this.setActiveItem(this.current + 1)
         } else if (this.current > 0 && x > 0) {
@@ -100,11 +113,13 @@ export default {
     // 切换
     setActiveItem (current) {
       this.current = current
+      setCache('current', current)
       this.$refs.carousel.setActiveItem(current)
     },
     // 选择朋友-进入聊天窗
     changeFriend (rid) {
       this.rid = rid
+      this.setActiveItem(1)
     },
     // 建立双向协议
     init () {
@@ -120,19 +135,24 @@ export default {
       const res = JSON.parse(e.data)
       if (res.code === 200 && res.data.data) {
         if (res.data.data.rid == this.rid) {
-          this.$refs.room.handleMessage(res.data)
-        } else {
-          this.$refs.friend.handleMessage(res.data)
+          if (this.current === 1) {
+            this.$refs.room.handleMessage(res.data)
+          }
+        }
+        if (this.current === 0) {
+          this.$refs.home.handleMessage(res.data.data)
         }
       }
     },
     // 连接建立之后执行send方法发送数据
     websocketonopen (data) {
-      this.websocketsend(JSON.stringify(data))
+      this.websocketsend(data)
     },
     // 失败重连
     websocketonerror () {
-      this.init()
+      if (!this.ws) {
+        this.init()
+      }
     },
     // 关闭连接
     websocketonclose (e) {
@@ -140,11 +160,15 @@ export default {
     },
     // 数据发送
     websocketsend (data) {
-      this.ws.send(data)
+      this.ws.send(JSON.stringify(data))
     },
   },
   created () {
-    this.init()
+    if (!this.ws) {
+      this.init()
+    }
+    this.current = typeof getCache('current') === "string" ? Number(getCache('current')) : 1
+    this.currentStart = this.current
   },
   destroyed () {
     if (this.ws) {
@@ -153,7 +177,7 @@ export default {
   },
   components: {
     luoRoom,
-    luoMail,
+    luoHome,
     luoUser
   }
 }
@@ -164,13 +188,14 @@ export default {
 .box {
   margin: 0;
   background: #fff;
-  z-index: 1;
   &-load {
     position: fixed;
-    top: .2rem;
     left: 0;
-    z-index: 2;
+    z-index: 9999;
     width: 100%;
+    font-size: .3rem;
+    padding: .15rem 0;
+    background: linear-gradient(to top, #fff, rgb(64, 219, 219));
   }
 }
 </style>

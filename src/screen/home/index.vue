@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <luo-header title="微信" search :left="false" right></luo-header>
+    <luo-header title="微信" search :left="false" right @addFriend="$router.push('/friend')"></luo-header>
     <div class="box-container">
       <el-row
         class="box-list ws-oh"
@@ -9,7 +9,7 @@
         style="min-width: 3rem;"
         v-for="item in dataList"
         :key="item.rid"
-        @click.native="handleNavtoRoom(item.rid)"
+        @click.native="handleChange(item)"
       >
         <el-col :span="4">
           <div class="pad-n10 box-img-user ws-mc">
@@ -25,14 +25,18 @@
         </el-col>
         <el-col :span="20" class="border-bottom pad-l10">
           <div class="ws-fl">
-            <h3 class="mg-t10">{{ item.rname }}</h3>
+            <h3 class="mg-t10">{{ item.rname | nameFilter($store.state.userInfo.uname) }}</h3>
             <p class="color-9f font-mini mg-t5">{{ item.title }}</p>
           </div>
           <div class="ws-fr">
             <p class="ws-tr font-mini mg-t5">{{ item.time | time }}</p>
+            <p v-if="item.count" class="mg-t10">
+              <el-tag type="danger">{{ item.count }}</el-tag>
+            </p>
           </div>
         </el-col>
       </el-row>
+      <el-divider class="mg-t40" v-if="dataList && dataList.length > 10">已经到底了</el-divider>
     </div>
   </div>
 </template>
@@ -51,10 +55,30 @@ export default {
     }
   },
   methods: {
+    load () {
+      this.getDataList()
+    },
+    handleChange (row) {
+      row.count = 0
+      this.$emit('change', row.rid)
+    },
+    handleMessage (data) {
+      console.log(data)
+      this.dataList.forEach((v, k) => {
+        if (v.rid == data.rid) {
+          v.count++
+          v.title = data.msg || '[图片]'
+          this.dataList.splice(k, 1, v)
+        }
+      })
+    },
     // 获取房间列表
     getDataList () {
       get_room_list().then(res => {
         if (res.code === 200) {
+          res.info.forEach(v => {
+            v.count = 0
+          })
           this.dataList = res.info
         }
       })
@@ -70,6 +94,12 @@ export default {
   created () {
     this.getDataList()
   },
+  filters: {
+    // 姓名过滤
+    nameFilter (arr, n) {
+      return JSON.parse(arr).filter(v => v != n)[0]
+    },
+  }
 }
 </script>
 
@@ -77,8 +107,10 @@ export default {
 <style scoped lang='scss'>
 .box {
   &-container {
-    min-height: 70vh;
+    height: 80vh;
+    padding-bottom: 1rem;
     background-color: #fff;
+    overflow-y: auto;
   }
   &-list {
     transition: all .15s;

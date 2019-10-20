@@ -3,7 +3,7 @@
     <luo-header left background="#ffffff"></luo-header>
     <div class="pad-n10 ws-tc">
       <img src="../../assets/logo.png" alt="qwq" class="box-logo">
-      <p class="font-w font-md mg-t10">伪信 Pseudorandom</p>
+      <p class="font-w font-md mg-t10">罗家机密 Pseudorandom</p>
       <p class="font-mini mg-t10">Version 1.0.0</p>
     </div>
     <luo-list @change="handleUpload" :svg="false" right title="检查新版本" bottom></luo-list>
@@ -11,9 +11,9 @@
     <luo-list :svg="false" right title="投诉" bottom></luo-list>
     <div class="box-bottom">
       <div class="box-bottom__fixed font-mini ws-tc">
-        <p class="color-blue">《伪信软件许可及服务协议》</p>
+        <p class="color-blue">《罗家机密软件许可及服务协议》</p>
         <p>和</p>
-        <p class="color-blue">《伪信隐私保护指引》</p>
+        <p class="color-blue">《罗家机密隐私保护指引》</p>
         <p>腾讯公司 版权所有</p>
         <p>Copyright &copy; 2011-2019 Luo.</p>
         <p>All Right Reserved.</p>
@@ -27,7 +27,7 @@ export default {
   name: 'box',
   data () {
     return {
-      msg: '关于伪信'
+      msg: '关于罗家机密'
     }
   },
   methods: {

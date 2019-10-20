@@ -1,11 +1,14 @@
 <template>
   <div class="box">
     <luo-header title="添加好友"></luo-header>
-    <el-input
-      v-model="searchName"
-      @change="getDataList"
-      placeholder="昵称/手机号"
-    ></el-input>
+    <div class="pad20">
+      <el-input
+        v-model="searchName"
+        @change="getDataList"
+        placeholder="昵称/手机号搜索 - 全人类"
+      ></el-input>
+    </div>
+    <el-divider v-if="!dataList || dataList.length === 0">请按昵称或手机号搜索</el-divider>
     <el-row>
       <el-col
         :sm="12"
@@ -14,20 +17,28 @@
         class="pad10"
       >
         <el-card>
-          <div class="bsgx-oh" slot="header">
-            <span>{{ item.uname }}</span>
+          <div class="ws-oh" slot="header">
+            <span class="ws-fl">{{ item.uname }}</span>
             <el-button
               size="mini"
               type="primary"
-              @click="handleSubmit(item.uid)"
+              class="ws-fr"
+              @click="handleSubmit(item)"
             >添加好友</el-button>
           </div>
           <div class="bsgx-oh">
-            <el-image :src="item.avatar" class="box-img bsgx-fl"></el-image>
+            <div class="ws-tc">
+              <el-image :src="item.avatar" class="box-img bsgx-fl"></el-image>
+            </div>
             <div class="bsgx-fr">
-              <h2>昵称：{{ item.uname }}</h2>
-              <p>手机号：{{ item.tel }}</p>
-              <p>在线状态：{{ item.status }}</p>
+              <el-row>
+                <el-col :span="12" class="font-md font-w">昵称：</el-col>
+                <el-col :span="12" class="ws-tr font-w font-md">{{ item.uname }}</el-col>
+                <el-col :span="12" class="mg-t10">手机号：</el-col>
+                <el-col :span="12" class="ws-tr mg-t10">{{ item.tel }}</el-col>
+                <!-- <el-col :span="12">在线状态：</el-col>
+                <el-col :span="12" class="ws-tr">{{ item.uname }}</el-col> -->
+              </el-row>
             </div>
           </div>
         </el-card>
@@ -48,14 +59,12 @@ export default {
     }
   },
   methods: {
-    // 聊天
-    handleMessage (data) {
-      console.log(data)
-    },
     // 添加好友
-    handleSubmit (uid) {
+    handleSubmit (row) {
       add_friend({
-        uid
+        uid: row.uid,
+        img: row.avatar,
+        uname: row.uname
       }).then(res => {
         if (res.code === 200) {
           this.$message({

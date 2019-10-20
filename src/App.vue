@@ -24,5 +24,6 @@ export default {
 .el-message {
   min-width: 80%;
   font-size: .2rem;
+  margin-top: 30px;
 }
 </style>

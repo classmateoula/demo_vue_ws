@@ -1,31 +1,35 @@
 <template>
   <div class="box">
-    <luo-header v-if="roomInfo" :title="roomInfo.rname" more>
+    <luo-header v-if="roomInfo" :title="roomInfo.rname || ''" more>
       <svg slot="left" @click="$emit('changeHeader')" t="1563099198923" class="icon ws-fl mg-l10" viewBox="0 0 1024 1024" version="1.1" p-id="1106" width=".15rem" height=".38rem"><path d="M736 960c-9 0-18.1-3.2-25-9.6L263 535.2c-13.8-12.8-13.8-33.6 0-46.4L711 73.6c13.8-12.8 36.2-12.8 50 0 13.8 12.8 13.8 33.6 0 46.4L338 512l423 392c13.8 12.8 13.8 33.6 0 46.4-6.9 6.4-16 9.6-25 9.6z" p-id="1107" fill="#2f2f36"></path></svg>
     </luo-header>
     <div class="box-body  pad-n20" ref="msgBox">
       <div
         v-for="(item, i) in dataList"
         :key="i"
-        class="ws-oh mg-t20 animated bounceInUp"
+        class="mg-t20 animated bounceInUp"
       >
-        <el-image
-          :src="item.user_img"
-          class="box-img__user radius-5"
-          :style="{ float: item.uid == formData.uid ? 'right' : 'left' }"
-        >
-          <img slot="error" :src="require('../../assets/logo.png')" alt="罗" class="img-block">
-        </el-image>
-        <div :style="{ float: item.uid == formData.uid ? 'right' : 'left' }">
-          <el-image
-            v-if="item.img"
-            :src="item.img"
-            class="box-img"
-          ></el-image>
-          <div
-            v-else
-            :class="(item.uid == formData.uid ? 'bg-blue' : 'bg-w') + ' pad10 radius-5'"
-          >{{ item.msg }}</div>
+        <p :class="'ws-t' + (item.uid == formData.uid ? 'r' : 'l') + ' pad10'">{{ item.uname }}</p>
+        <div class="ws-oh">
+          <div :style="{ float: item.uid == formData.uid ? 'right' : 'left' }">
+            <el-image
+              :src="item.user_img"
+              class="box-img__user radius-5"
+            >
+              <img slot="error" :src="require('../../assets/logo.png')" alt="罗" class="img-block">
+            </el-image>
+          </div>
+          <div :style="{ float: item.uid == formData.uid ? 'right' : 'left' }">
+            <el-image
+              v-if="item.img"
+              :src="item.img"
+              class="box-img"
+            ></el-image>
+            <div
+              v-else
+              :class="(item.uid == formData.uid ? 'bg-blue' : 'bg-w') + ' pad10 radius-5'"
+            >{{ item.msg }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -128,6 +132,7 @@ export default {
         rid: this.rid
       }).then(res => {
         if (res.code === 200) {
+          res.info[0].rname = JSON.parse(res.info[0].rname).filter(v => v != this.formData.uname)[0]
           this.roomInfo = res.info[0]
           this.$emit('message', {
             type: 1,
@@ -188,7 +193,7 @@ export default {
   components: {
     RoomLook,
     RoomMore,
-  }
+  },
 }
 </script>
 

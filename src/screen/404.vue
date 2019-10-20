@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p>404</p>
-    <el-button @click="$router.back()">返回</el-button>
+    <luo-header title="404"></luo-header>
+    <el-image class="img-block" :src="require('../assets/404/404.gif')"></el-image>
   </div>
 </template>
 
