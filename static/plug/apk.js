@@ -2,9 +2,7 @@ let backnum = 1
 document.addEventListener('plusready',function(){
   if (window.plus) {
     plus.key.addEventListener("backbutton", function (e) {
-      let url = window.location.href
-      let backPath = url.slice(url.lastIndexOf('/'))
-      if (backPath === '/' || backPath === '/index' || backPath === '/login' || backPath === '/welcome') {
+      if (/(index)|(login)|(welcome)$/.test(window.location.hash)) {
         if(backnum < 2){
           backnum++
           plus.nativeUI.toast('再按一次返回退出应用！')

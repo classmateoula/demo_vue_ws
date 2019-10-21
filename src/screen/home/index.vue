@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <luo-header title="微信" search :left="false" right @addFriend="$router.push('/friend')"></luo-header>
+    <luo-header title="微信" :left="false" right @addFriend="$router.push('/friend')"></luo-header>
     <div class="box-container">
       <el-row
         class="box-list ws-oh"
@@ -26,7 +26,7 @@
         <el-col :span="20" class="border-bottom pad-l10">
           <div class="ws-fl">
             <h3 class="mg-t10">{{ item.rname | nameFilter($store.state.userInfo.uname) }}</h3>
-            <p class="color-9f font-mini mg-t5">{{ item.title }}</p>
+            <p class="color-9f font-mini mg-t5">{{ item.title | titleFilter }}</p>
           </div>
           <div class="ws-fr">
             <p class="ws-tr font-mini mg-t5">{{ item.time | time }}</p>
@@ -98,6 +98,13 @@ export default {
     // 姓名过滤
     nameFilter (arr, n) {
       return JSON.parse(arr).filter(v => v != n)[0]
+    },
+    // 消息长度过滤
+    titleFilter (val) {
+      if (!val) {
+        return ''
+      }
+      return val.length > 14 ? (val.slice(0, 14) + '...') : val
     },
   }
 }

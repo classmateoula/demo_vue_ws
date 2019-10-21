@@ -9,11 +9,11 @@ let load
 // const baseUrl = 'http://node-api.leimu.xn--6qq986b3xl/api'
 // const wsUrl = 'ws://node-ws.leimu.xn--6qq986b3xl'
 
-const baseUrl = 'http://192.168.1.101:3000/api'
-const wsUrl = 'ws://192.168.1.101:9001'
+// const baseUrl = 'http://192.168.1.106:3000/api'
+// const wsUrl = 'ws://192.168.1.106:9001'
 
-// const baseUrl = window.location.port === '3821' ? 'http://127.0.0.1:3000/api' : 'http://node-api.leimu.xn--6qq986b3xl/api'
-// const wsUrl = window.location.port === '3821' ? 'ws://127.0.0.1:9001' : 'ws://node-ws.leimu.xn--6qq986b3xl'
+const baseUrl = window.location.port === '3821' ? 'http://127.0.0.1:3000/api' : 'http://node-api.leimu.xn--6qq986b3xl/api'
+const wsUrl = window.location.port === '3821' ? 'ws://127.0.0.1:9001' : 'ws://node-ws.leimu.xn--6qq986b3xl'
 
 axios.defaults.baseURL = baseUrl
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
