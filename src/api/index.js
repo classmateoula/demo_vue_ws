@@ -6,11 +6,11 @@ import { Loading, Message } from 'element-ui'
 
 let load
 
-const baseUrl = window.location.port === '3821'
-  ? 'http://192.168.1.101:3000/api'
+const baseUrl = window.location.port != '3821'
+  ? 'http://192.168.1.177:3000/api'
   : 'http://node-api.luoschool.cn/api'
-const wsUrl = window.location.port === '3821'
-  ? 'ws://192.168.1.101:9001'
+const wsUrl = window.location.port != '3821'
+  ? 'ws://192.168.1.177:9001'
   : 'ws://node-ws.luoschool.cn'
 
 axios.defaults.baseURL = baseUrl
