@@ -43,6 +43,9 @@ export default new Router({
       //   },
       // ]
     }, {
+      path: '/add_group',
+      component: () => import('@/screen/home/add_group')
+    }, {
       path: '/theme',
       component: Theme
     }, {

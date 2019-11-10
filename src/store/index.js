@@ -8,7 +8,7 @@ let state = {
   token: getCache('token'),
   userInfo: JSON.parse(getCache('userInfo') ? getCache('userInfo') : '{}'),
   color: '#2f2f36',
-  server: 'http://ws.leimu.xn--6qq986b3xl',
+  server: 'http://ws.luoschool.cn',
 }
 for (let i in api) {
   state[i] = api[i]
