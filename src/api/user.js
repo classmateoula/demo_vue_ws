@@ -53,3 +53,12 @@ export function get_friend_list (data) {
     data
   })
 }
+
+// 修改用户头像
+export function update_user_img (data) {
+  return axios({
+    method: 'POST',
+    url: '/update/user/img',
+    data
+  })
+}

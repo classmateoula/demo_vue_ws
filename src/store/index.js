@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as api from '../api'
 import { getCache } from '../../static/plug/global'
+import { Object } from 'core-js'
 Vue.use(Vuex)
 
 let state = {
@@ -31,7 +32,11 @@ const store = new Vuex.Store({
       state.color = val
     },
     setUserInfoMua (state, val) {
-      state.userInfo = val
+      Object.keys(state.userInfo).forEach(k => {
+        if (typeof val[k] != 'undefined') {
+          state.userInfo[k] = val[k]
+        }
+      })
     },
   },
   // 监听

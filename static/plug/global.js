@@ -1,10 +1,21 @@
+import COS from 'cos-js-sdk-v5'
+import { Message } from 'element-ui'
 // 公共数据
 const globalData = {
-  imgUrl: 'https://1084209545-1256998482.cos-website.ap-chengdu.myqcloud.com',
+  imgUrl: 'https://luo-1257979020.file.myqcloud.com/',
   cacheType: 'local', // session浏览器缓存 local本地缓存
   appliance: window.navigator.userAgent.toLowerCase(),
-  version: '1.2.5'
+  version: '1.2.5',
+  config: {
+    Bucket: 'luo-1257979020',
+    Region: 'ap-chengdu'
+  }
 }
+
+let cos = new COS({
+  SecretId: 'AKIDkLjuuhNenmcFfs9eFaeS0IPGrCG4euwm',
+  SecretKey: 'qUv995sSoxtcCYjhS2QaZLuFNH2e2DBv',
+});
 
 // 编辑公共数据
 export function set (key, val) {
@@ -31,12 +42,6 @@ export function moneyFilter (val, max) {
   return isNaN(val) ? 0 : val
 }
 
-// 上传文件名设置
-export function cosUrlEncrypt (val) {
-  val = (new Date() / 1).toString(7) + val
-  return val
-}
-
 // 设置缓存
 function setCacheType () {
   if (globalData.cacheType === 'session') {
@@ -57,30 +62,42 @@ export function getCache (key) {
 export function removeCache (key) {
   return setCacheType().removeItem(key)
 }
+
+// 下载图片
+export function downloadFile (url) {
+  let a = document.createElement('a')
+  a.href = url
+  a.target = 'download'
+  a.click()
+}
+
 // 上传图片
-export function uploadFile (path) {
+export function uploadFile (file) {
   return new Promise((resolve, reject) => {
-    // let key = path.slice(path.lastIndexOf('/'))
-    // cos.postObject({
-    //   Bucket: globalData.config.Bucket,
-    //   Region: globalData.config.Region,
-    //   Key: key,
-    //   FilePath: path,
-    //   onProgress: res => {
-    //     if (res.percent === 1) {
-    //       this.$message({
-    //         type: 'success',
-    //         message: '上传成功'
-    //       })
-    //       globalData.imgUrl + key ? resolve(globalData.imgUrl + key) : console.error('上传失败')
-    //       // reject('上传失败')
-    //     } else {
-    //       this.$message({
-    //         type: 'info',
-    //         message: '已上传' + parseInt(res.percent * 100) + '%'
-    //       })
-    //     }
-    //   }
-    // })
+    let key = parseInt(new Date() / 24 * 60 * 60000).toString(16) + '/' + parseInt(new Date() / 1 % (24 * 60 * 60000)).toString(16) + '/' + file.name
+    cos.putObject({
+      Bucket: globalData.config.Bucket,
+      Region: globalData.config.Region,
+      Key: key,
+      Body: file,
+      onProgress: res => {
+        if (res.percent === 1) {
+          Message({
+            type: 'success',
+            message: '上传成功'
+          })
+          resolve(globalData.imgUrl + key)
+        } else {
+          Message({
+            type: 'info',
+            message: '已上传' + parseInt(res.percent * 100) + '%'
+          })
+        }
+      }
+    }, (err) => {
+      if (err) {
+        reject(err)
+      }
+    })
   })
 }

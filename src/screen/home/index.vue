@@ -63,7 +63,7 @@ export default {
       this.$emit('change', row.rid)
     },
     handleMessage (data) {
-      console.log(data)
+      // console.log(data)
       this.dataList.forEach((v, k) => {
         if (v.rid == data.rid) {
           v.count++

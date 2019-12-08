@@ -1,84 +1,46 @@
 <template>
-  <el-carousel
-    ref="carousel"
-    :autoplay="false"
-    height="2rem"
-    indicator-position='none'
-    @touchstart.native="handleStart"
-    @touchend.native="handleMove"
-  >
-    <el-carousel-item class="ws-oh">
-      <div
-        class="ws-fl box-img__body"
-        v-for="i of 8"
+  <div class=" pad10" style="overflow-y: auto;height: 1rem">
+    <div class="ws-oh">
+      <img
+        v-for="(item, i) in dataList"
         :key="i"
+        :src="item.url"
+        class="ws-fl mg5"
+        style="width: .55rem;height: .5rem;"
+        @click="$emit('change', item.url)"
       >
-        <img src="../../../assets/logo.png" @click="handleClick" alt="qwq" class="box-img">
-      </div>
-    </el-carousel-item>
-    <el-carousel-item class="ws-oh">
-      <div
-        class="ws-fl box-img__body"
-        v-for="i of 8"
-        :key="i"
-      >
-        <img src="../../../assets/logo.png" alt="qwq" class="box-img">
-      </div>
-    </el-carousel-item>
-  </el-carousel>
+    </div>
+    <div v-if="dataList && dataList.length === 0">未收藏表情包</div>
+  </div>
 </template>
-
 <script>
+import { get_img_list } from '@/api/img'
+
 export default {
   name: 'RoomLook',
   data () {
     return {
-      msg: '表情',
-      clientStart: null,
-      current: 0
+      msg: '图片列表',
+      dataList: null,
     }
   },
   methods: {
-    // 单机图片
-    handleClick () {
-      this.$emit('change', 'img')
+    getDataList () {
+      get_img_list().then(res => {
+        if (res.code === 200) {
+          this.dataList = res.info
+        }
+      })
     },
-    // 移动开始
-    handleStart ({ changedTouches }) {
-      this.clientStart = changedTouches[0].clientX
-    },
-    // 移动结束
-    handleMove ({ changedTouches }) {
-      let p = changedTouches[0].clientX - this.clientStart
-      if (!(Math.abs(p) > 100)) {
-        return false
-      }
-      if (p < 0 && this.current < 1) {
-        this.setActiveItem(this.current + 1)
-      } else if (this.current > 0 && p > 0) {
-        this.setActiveItem(this.current - 1)
-      }
-    },
-    // 切换
-    setActiveItem (current) {
-      this.current = current
-      this.$refs.carousel.setActiveItem(current)
-    },
+  },
+  created () {
+    this.getDataList()
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 .box {
   margin: 0;
-  &-img {
-    width: 100%;
-    &__body {
-      width: .8rem;
-      height: .8rem;
-      margin: .1rem .13rem;
-    }
-  }
 }
 </style>

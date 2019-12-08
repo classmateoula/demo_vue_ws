@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     getDataList () {
-      console.log(this)
+      // console.log(this)
     },
   },
   created () {

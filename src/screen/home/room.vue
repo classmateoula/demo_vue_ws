@@ -20,11 +20,18 @@
             </el-image>
           </div>
           <div :style="{ float: item.uid == formData.uid ? 'right' : 'left' }" class=" box-body__content">
-            <el-image
+            <el-dropdown
+              trigger="click"
               v-if="item.img"
-              :src="item.img"
-              class="box-img"
-            ></el-image>
+            >
+              <el-image
+                :src="item.img"
+                class="box-img"
+              ></el-image>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item icon="el-icon-plus" @click.native="handlePlus(item.img)">收藏</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <div
               v-else
               :class="(item.uid == formData.uid ? 'bg-blue' : 'bg-gray color-white') + ' pad10 radius-5'"
@@ -52,10 +59,13 @@
         </el-row>
         <div :style="{ height: moreHeight + 'rem' }" class="box-bottom-more bg-f2">
           <div v-if="moreStatus === 1">
-            <RoomLook @change="handleChangeLook" />
+            <RoomLook ref="roomLook" @change="handleChangeLook" />
           </div>
           <div v-else>
-            <room-more></room-more>
+            <room-more
+              @changeAddress="changeAddress"
+              @changeImg="handleChangeLook"
+            ></room-more>
           </div>
         </div>
       </div>
@@ -69,6 +79,7 @@ import {
   RoomMore,
 } from '@/components/room'
 import { get_msg_list, post_add_msg, get_room_info } from '@/api/room'
+import { post_img_add } from '@/api/img'
 import 'animate.css'
 
 let timer
@@ -99,6 +110,26 @@ export default {
     }
   },
   methods: {
+    changeAddress () {
+      console.log('显示位置')
+      this.$message('制作中...')
+    },
+    // 收藏图片
+    handlePlus (url) {
+      post_img_add({
+        url
+      }).then(res => {
+        if (res.code === 200) {
+          if (this.$refs.roomLook) {
+            this.$refs.roomLook.getDataList()
+          }
+          this.$message({
+            type: 'success',
+            message: '收藏成功'
+          })
+        }
+      })
+    },
     // 刷新
     load () {
       this.getDataList()
@@ -155,13 +186,14 @@ export default {
     },
     // 发送图片
     handleChangeLook (url) {
+      console.log(url)
       this.formData.img = url
       this.handleSubmit()
     },
     // 发送消息
     handleSubmit () {
       if (!this.formData.img && /^\s*$/.test(this.formData.msg)) {
-        console.log('发送失败', this.formData)
+        // console.log('发送失败', this.formData)
         return false
       }
       post_add_msg(this.formData).then(res => {
@@ -183,7 +215,7 @@ export default {
         this.moreHeight = 0
         return false
       }
-      this.moreHeight = 2
+      this.moreHeight = 1.3
       this.moreStatus = status
     },
   },

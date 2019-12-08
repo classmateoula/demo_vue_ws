@@ -36,6 +36,7 @@ export function post_room_add (data) {
   })
 }
 
+// 获取房间详情
 export function get_room_info (data) {
   return axios({
     url: '/get/room/info',

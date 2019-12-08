@@ -6,12 +6,12 @@ import { Loading, Message } from 'element-ui'
 
 let load
 
-const baseUrl = window.location.port != '3821'
-  ? 'http://192.168.1.177:3000/api'
-  : 'http://node-api.luoschool.cn/api'
-const wsUrl = window.location.port != '3821'
-  ? 'ws://192.168.1.177:9001'
-  : 'ws://node-ws.luoschool.cn'
+const baseUrl = window.location.port == 3821
+  ? 'http://localhost:3000/api'
+  : 'https://node-api.luoschool.cn/api'
+const wsUrl = window.location.port == 3821
+  ? 'ws://localhost:9001'
+  : 'wss://node-ws.luoschool.cn'
 
 axios.defaults.baseURL = baseUrl
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -27,7 +27,6 @@ axios.interceptors.request.use(config => {
   load = Loading.service({ text: '加载中...' })
   switch (config.method) {
     case 'get':
-      console.log('get')
       break
     default:
       if (config.data) {
@@ -35,7 +34,6 @@ axios.interceptors.request.use(config => {
       } else {
         config.data = { token: getCache('token') }
       }
-      console.log(config)
       break
   }
   return config
