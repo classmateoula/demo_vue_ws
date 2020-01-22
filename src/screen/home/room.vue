@@ -186,7 +186,6 @@ export default {
     },
     // 发送图片
     handleChangeLook (url) {
-      console.log(url)
       this.formData.img = url
       this.handleSubmit()
     },
@@ -205,6 +204,7 @@ export default {
           }
           this.$emit('message', actions)
           this.formData.msg = null
+          this.setMoreHeight(this.moreStatus)
         }
       })
     },

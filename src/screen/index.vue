@@ -56,6 +56,7 @@ export default {
       clientMean: 0,
       current: 1,
       currentStart: 1,
+      timer: null,
       dataType: 1 // 1-登场；2-消息/图片/语音；
     };
   },
@@ -148,11 +149,12 @@ export default {
     // 关闭连接
     websocketonclose(e) {
       // console.log("断开连接", e);
-      this.$confirm("断开连接，是否需要重连", "提升", { type: "warning" }).then(
-        () => {
-          location.reload();
-        }
-      );
+      if (!this.timer) {
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer)
+          this.timer = null
+        }, 2000);
+      }
     },
     // 数据发送
     websocketsend(data) {
@@ -172,6 +174,8 @@ export default {
     if (this.ws) {
       this.ws.close();
     }
+    clearTimeout(this.timer)
+    this.timer = null
   },
   components: {
     luoRoom,
